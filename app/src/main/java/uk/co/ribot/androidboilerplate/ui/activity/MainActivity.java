@@ -19,7 +19,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import rx.android.app.AppObservable;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
