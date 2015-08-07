@@ -12,6 +12,7 @@ Libraries and tools included:
 - [SqlBrite](https://github.com/square/sqlbrite)
 - [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
+- [Timber] (https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)
 - [Otto](http://square.github.io/otto/) event bus
 - Functional tests with [Espresso](https://code.google.com/p/android-test-kit/wiki/Espresso)
