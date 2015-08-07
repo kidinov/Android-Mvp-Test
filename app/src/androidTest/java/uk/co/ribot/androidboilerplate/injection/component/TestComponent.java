@@ -7,6 +7,6 @@ import uk.co.ribot.androidboilerplate.injection.module.ApplicationTestModule;
 
 @Singleton
 @Component(modules = ApplicationTestModule.class)
-public interface ApplicationTestComponent extends ApplicationComponent {
+public interface TestComponent extends ApplicationComponent {
 
 }
