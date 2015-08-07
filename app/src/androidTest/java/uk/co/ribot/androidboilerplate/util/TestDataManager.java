@@ -6,7 +6,7 @@ import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.component.ApplicationTestComponent;
+import uk.co.ribot.androidboilerplate.injection.component.TestComponent;
 import uk.co.ribot.androidboilerplate.injection.component.DaggerDataManagerTestComponent;
 import uk.co.ribot.androidboilerplate.injection.module.DataManagerTestModule;
 
@@ -25,10 +25,10 @@ public class TestDataManager extends DataManager {
 
     @Override
     protected void injectDependencies(Context context) {
-        ApplicationTestComponent applicationTestComponent = (ApplicationTestComponent)
+        TestComponent testComponent = (TestComponent)
                 BoilerplateApplication.get(context).getComponent();
         DaggerDataManagerTestComponent.builder()
-                .applicationTestComponent(applicationTestComponent)
+                .testComponent(testComponent)
                 .dataManagerTestModule(new DataManagerTestModule(context))
                 .build()
                 .inject(this);
