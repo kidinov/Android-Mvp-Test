@@ -57,8 +57,7 @@ public class MainActivity extends BaseActivity {
                 .subscribeOn(mDataManager.getSubscribeScheduler())
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
-                    public void onCompleted() {
-                    }
+                    public void onCompleted() { }
 
                     @Override
                     public void onError(Throwable e) {
