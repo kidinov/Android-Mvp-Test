@@ -9,33 +9,26 @@
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
 
-    <rule ref="rulesets/java/android.xml">
-        <!-- Config.LOGD deprecated in API level 4 !-->
-        <exclude name="ProtectLogD" />
-        <!-- Config.LOGV deprecated in API level 4 !-->
-        <exclude name="ProtectLogV" />
-        <exclude name="GuardLogStatementJavaUtil" />
-    </rule>
+    <rule ref="rulesets/java/android.xml" />
     <rule ref="rulesets/java/clone.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
     <rule ref="rulesets/java/imports.xml">
         <!-- Espresso is designed this way !-->
         <exclude name="TooManyStaticImports" />
     </rule>
-    <rule ref="rulesets/java/logging-java.xml" >
+    <rule ref="rulesets/java/logging-java.xml">
         <!-- This rule wasn't working properly and given errors in every var call info -->
         <exclude name="GuardLogStatementJavaUtil" />
     </rule>
-    <rule ref="rulesets/java/braces.xml" >
+    <rule ref="rulesets/java/braces.xml">
         <!-- We allow single line if's without braces -->
-        <exclude name="IfStmtsMustUseBraces"/>
+        <exclude name="IfStmtsMustUseBraces" />
     </rule>
     <rule ref="rulesets/java/strings.xml" />
     <rule ref="rulesets/java/basic.xml" />
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming" />
         <exclude name="LongVariable" />
-        <exclude name="LongMethodName" />
         <exclude name="ShortMethodName" />
         <exclude name="ShortVariable" />
         <exclude name="ShortClassName" />
