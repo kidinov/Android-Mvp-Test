@@ -24,7 +24,7 @@ if (distribution != null) {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.0'
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId 'uk.co.ribot.androidboilerplate'
