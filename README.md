@@ -114,9 +114,9 @@ To quickly start a new project from this boilerplate follow the next steps:
   * Rename packages in main, androidTest and test using Android Studio.
   * In `app/build.gradle` file, `packageName` and `testInstrumentationRunner`.
   * In `src/main/AndroidManifest.xml` and `src/debug/AndroidManifest.xml`.
-* Optionally, in `app/build.gradle` add the signing config to enable release versions.
-* Optionally, replace Crashlytics API key in AndroidManifest.xml and uncomment Crashlytics lines in `AndroidBoilerplateApplication.java` and `app/build.gradle`
 * Create a new git repository, [see GitHub tutorial](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/).
 * Replace the example code with your app code following the same architecture.
+* In `app/build.gradle` add the signing config to enable release versions.
+* Add Fabric API key and secret to fabric.properties and uncomment Fabric plugin set up in `app/build.gradle`
 * Update `proguard-rules.pro` to keep models (see TODO in file) and add extra rules to file if needed.
 * Update README with information relevant to the new project.
