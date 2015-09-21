@@ -1,19 +1,19 @@
 package uk.co.ribot.androidboilerplate.data.remote;
 
-import com.google.gson.GsonBuilder;
 
-import retrofit.RestAdapter;
-import retrofit.converter.GsonConverter;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
+import retrofit.RxJavaCallAdapterFactory;
 
 public class RetrofitHelper {
 
     public RibotsService newRibotsService() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(RibotsService.ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setConverter(new GsonConverter(new GsonBuilder().create()))
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(RibotsService.ENDPOINT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        return restAdapter.create(RibotsService.class);
+        return retrofit.create(RibotsService.class);
     }
 
 }

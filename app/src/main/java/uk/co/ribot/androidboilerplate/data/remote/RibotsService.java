@@ -9,8 +9,8 @@ import rx.Observable;
 
 public interface RibotsService {
 
-    String ENDPOINT = "https://ribots-api.ribot.io";
+    String ENDPOINT = "https://ribots-api.ribot.io/";
 
-    @GET("/ribots")
+    @GET("ribots")
     Observable<List<Ribot>> getRibots();
 }
