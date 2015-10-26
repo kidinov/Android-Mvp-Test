@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e("There was an error loading the ribots: " + e);
+                        Timber.e(e, "There was an error loading the ribots.");
                     }
 
                     @Override
