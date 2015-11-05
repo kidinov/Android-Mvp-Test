@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
-
 import uk.co.ribot.easyadapter.ItemViewHolder;
 import uk.co.ribot.easyadapter.PositionInfo;
 import uk.co.ribot.easyadapter.annotations.LayoutId;
@@ -30,9 +29,9 @@ public class RibotItemViewHolder extends ItemViewHolder<Ribot> {
 
     @Override
     public void onSetValues(Ribot ribot, PositionInfo positionInfo) {
-        mHexColorBox.setBackgroundColor(Color.parseColor(ribot.hexCode));
-        mName.setText(ribot.info.firstName + " " + ribot.info.lastName);
-        mRole.setText(ribot.info.role);
+        mHexColorBox.setBackgroundColor(Color.parseColor(ribot.profile.hexColor));
+        mName.setText(String.format("%s %s", ribot.profile.name.first, ribot.profile.name.last));
+        mRole.setText(ribot.profile.email);
     }
 
 }

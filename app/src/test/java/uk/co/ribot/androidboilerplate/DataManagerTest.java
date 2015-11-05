@@ -5,15 +5,6 @@ import android.database.Cursor;
 
 import com.squareup.otto.Bus;
 
-import uk.co.ribot.androidboilerplate.data.DataManager;
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.Db;
-import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.util.DefaultConfig;
-import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +18,14 @@ import java.util.List;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
+import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
+import uk.co.ribot.androidboilerplate.data.local.Db;
+import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.util.DefaultConfig;
+import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -68,10 +67,9 @@ public class DataManagerTest {
         result.assertReceivedOnNext(ribots);
 
         Cursor cursor = mDatabaseHelper.getBriteDb()
-                .query("SELECT * FROM " + Db.RibotsTable.TABLE_NAME);
+                .query("SELECT * FROM " + Db.RibotProfileTable.TABLE_NAME);
         assertEquals(2, cursor.getCount());
         cursor.close();
     }
-
 
 }

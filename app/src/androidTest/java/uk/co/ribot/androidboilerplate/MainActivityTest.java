@@ -8,15 +8,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
+import rx.Observable;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.injection.TestComponentRule;
 import uk.co.ribot.androidboilerplate.ui.activity.MainActivity;
 import uk.co.ribot.androidboilerplate.util.ClearDataRule;
 import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
-
-import java.util.List;
-
-import rx.Observable;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -48,9 +47,11 @@ public class MainActivityTest {
         for (Ribot mockRibot : mockRibots) {
             onView(withId(R.id.recycler_view))
                     .perform(RecyclerViewActions.scrollToPosition(position));
-            onView(withText(mockRibot.info.firstName + " " + mockRibot.info.lastName))
+            String name = String.format("%s %s", mockRibot.profile.name.first,
+                    mockRibot.profile.name.last);
+            onView(withText(name))
                     .check(matches(isDisplayed()));
-            onView(withText(mockRibot.info.role))
+            onView(withText(mockRibot.profile.email))
                     .check(matches(isDisplayed()));
             position++;
         }

@@ -6,10 +6,10 @@ import dagger.Module;
 import dagger.Provides;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
-import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 
 import static org.mockito.Mockito.mock;
 

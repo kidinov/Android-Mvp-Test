@@ -1,41 +1,48 @@
 package uk.co.ribot.androidboilerplate.util;
 
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import uk.co.ribot.androidboilerplate.data.model.Name;
+import uk.co.ribot.androidboilerplate.data.model.Profile;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+
 public class MockModelsUtil {
 
-    public static String generateRandomString() {
+    public static String randomString() {
         return UUID.randomUUID().toString();
     }
 
     public static Ribot createRibot() {
-        Ribot ribot = new Ribot();
-        ribot.info = new Ribot.Info();
-        ribot.id = generateRandomString();
-        ribot.hexCode = "#f49637";
-        ribot.info.firstName = "Antony";
-        ribot.info.lastName = "Ribot";
-        ribot.info.role = "CEO";
-        return ribot;
+        return new Ribot(createProfile());
     }
 
     public static List<Ribot> createListRibots(int number) {
         List<Ribot> ribots = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            Ribot ribot = new Ribot();
-            ribot.info = new Ribot.Info();
-            ribot.id = generateRandomString();
-            ribot.hexCode = "#f49637";
-            ribot.info.firstName = "Name" + i;
-            ribot.info.lastName = "Surname" + i;
-            ribot.info.role = "Role" + i;
-            ribots.add(ribot);
+            ribots.add(createRibot());
         }
         return ribots;
+    }
+
+    public static Profile createProfile() {
+        Profile profile = new Profile();
+        profile.email = randomString();
+        profile.name = createName();
+        profile.dateOfBirth = new Date();
+        profile.hexColor = "#0066FF";
+        profile.avatar = "http://api.ribot.io/images/" + profile.email;
+        profile.bio = randomString();
+        return profile;
+    }
+
+    public static Name createName() {
+        Name name = new Name();
+        name.first = randomString();
+        name.last = randomString();
+        return name;
     }
 
 }

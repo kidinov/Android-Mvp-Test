@@ -4,22 +4,21 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.SyncService;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.ui.adapter.RibotItemViewHolder;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.ButterKnife;
-import rx.subscriptions.CompositeSubscription;
 import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 public class MainActivity extends BaseActivity {

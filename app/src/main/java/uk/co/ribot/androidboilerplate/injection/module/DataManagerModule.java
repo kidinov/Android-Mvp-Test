@@ -6,11 +6,11 @@ import dagger.Module;
 import dagger.Provides;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
-import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RetrofitHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 
 /**
  * Provide dependencies to the DataManager, mainly Helper classes and Retrofit services.

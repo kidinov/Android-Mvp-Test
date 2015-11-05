@@ -8,15 +8,14 @@ import android.os.IBinder;
 
 import javax.inject.Inject;
 
+import rx.Observer;
+import rx.Subscription;
 import timber.log.Timber;
 import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.BuildConfig;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.util.AndroidComponentUtil;
 import uk.co.ribot.androidboilerplate.util.NetworkUtil;
-
-import rx.Observer;
-import rx.Subscription;
 
 public class SyncService extends Service {
 

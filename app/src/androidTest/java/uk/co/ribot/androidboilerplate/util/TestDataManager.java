@@ -6,8 +6,8 @@ import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.component.TestComponent;
 import uk.co.ribot.androidboilerplate.injection.component.DaggerDataManagerTestComponent;
+import uk.co.ribot.androidboilerplate.injection.component.TestComponent;
 import uk.co.ribot.androidboilerplate.injection.module.DataManagerTestModule;
 
 /**

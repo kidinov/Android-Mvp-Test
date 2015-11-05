@@ -2,12 +2,6 @@ package uk.co.ribot.androidboilerplate;
 
 import android.database.Cursor;
 
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.Db;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.util.DefaultConfig;
-import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +10,14 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import rx.observers.TestSubscriber;
+import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
+import uk.co.ribot.androidboilerplate.data.local.Db;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.util.DefaultConfig;
+import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -46,11 +44,11 @@ public class DatabaseHelperTest {
         result.assertReceivedOnNext(ribots);
 
         Cursor cursor = mDatabaseHelper.getBriteDb()
-                .query("SELECT * FROM " + Db.RibotsTable.TABLE_NAME);
+                .query("SELECT * FROM " + Db.RibotProfileTable.TABLE_NAME);
         assertEquals(2, cursor.getCount());
         for (Ribot ribot : ribots) {
             cursor.moveToNext();
-            assertEquals(ribot, Db.RibotsTable.parseCursor(cursor));
+            assertEquals(ribot.profile, Db.RibotProfileTable.parseCursor(cursor));
         }
     }
 
@@ -65,7 +63,7 @@ public class DatabaseHelperTest {
         TestSubscriber<List<Ribot>> result = new TestSubscriber<>();
         mDatabaseHelper.getRibots().subscribe(result);
         result.assertNoErrors();
-        result.assertReceivedOnNext(Collections.singletonList(ribots));
+        result.assertValue(ribots);
     }
 
 }

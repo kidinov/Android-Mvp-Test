@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "ribots.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public DbOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -19,7 +19,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         try {
             //Uncomment line below if you want to enable foreign keys
             //db.execSQL("PRAGMA foreign_keys=ON;");
-            db.execSQL(Db.RibotsTable.CREATE);
+            db.execSQL(Db.RibotProfileTable.CREATE);
             //Add other tables here
             db.setTransactionSuccessful();
         } finally {

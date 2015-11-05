@@ -4,11 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import com.squareup.otto.Bus;
 
 import java.util.List;
@@ -19,6 +14,11 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Action0;
 import rx.functions.Func1;
+import uk.co.ribot.androidboilerplate.BoilerplateApplication;
+import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
+import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import uk.co.ribot.androidboilerplate.injection.component.DaggerDataManagerComponent;
 import uk.co.ribot.androidboilerplate.injection.module.DataManagerModule;
 
