@@ -91,19 +91,26 @@ This will run all the code analysis tools and unit tests in the following order:
 
 The project can be distributed using either [Crashlytics](http://support.crashlytics.com/knowledgebase/articles/388925-beta-distributions-with-gradle) or the [Google Play Store](https://github.com/Triple-T/gradle-play-publisher).
 
-To do this, set up a local variable `$ANDROID_DISTRIBUTION` to any of the following values:
+### Play Store
 
-    play-production
-    play-alpha
-    play-beta
-    crashlytics-yourgroupname
-    crashlytics-yourgroupname2
+We use the __Gradle Play Publisher__ plugin. Once set up correctly, you will be able to push new builds to
+the Alpha, Beta or production channels like this
 
-    etc
+```
+./gradlew publishApkRelease
+```
+Read [plugin documentation](https://github.com/Triple-T/gradle-play-publisher) for more info.
 
-Then use the following command e.g. on your CI server:
+### Crashlytics
 
-    ./gradlew clean check connectedAndroidTest assembleRelease $(if [[ $ANDROID_DISTRIBUTION == crashlytics-* ]]; then echo crashlyticsUploadDistributionRelease; else echo publishApkRelease; fi )
+You can also use Fabric's Crashlytics for distributing beta releases. Remember to add your fabric
+account details to `app/src/fabric.properties`.
+
+To upload a release build to Crashlytics run:
+
+```
+./gradlew assembleRelease crashlyticsUploadDistributionRelease
+```
 
 ## New project setup 
 
