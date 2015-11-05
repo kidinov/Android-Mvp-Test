@@ -1,5 +1,6 @@
-package uk.co.ribot.androidboilerplate.injection;
+package uk.co.ribot.androidboilerplate.test.common;
 
+import android.app.Application;
 import android.support.test.InstrumentationRegistry;
 
 import org.junit.rules.TestRule;
@@ -10,10 +11,9 @@ import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.component.DaggerTestComponent;
-import uk.co.ribot.androidboilerplate.injection.component.TestComponent;
-import uk.co.ribot.androidboilerplate.injection.module.ApplicationTestModule;
-import uk.co.ribot.androidboilerplate.util.TestDataManager;
+import uk.co.ribot.androidboilerplate.test.common.injection.component.DaggerTestComponent;
+import uk.co.ribot.androidboilerplate.test.common.injection.component.TestComponent;
+import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTestModule;
 
 /**
  * Test rule that creates and sets a Dagger TestComponent into the application overriding the
@@ -25,6 +25,22 @@ import uk.co.ribot.androidboilerplate.util.TestDataManager;
 public class TestComponentRule implements TestRule {
 
     private TestComponent mTestComponent;
+    private boolean mMockableDataManager;
+
+    /**
+     * If mockableDataManager is true, it will crate a data manager using Mockito.spy()
+     * Spy objects call real methods unless they are stubbed. So the DataManager will work as
+     * usual unless an specific method is mocked.
+     * A full mock DataManager is not an option because there are several methods that still
+     * need to return the real value, i.e dataManager.getSubscribeScheduler()
+     */
+    public TestComponentRule(boolean mockableDataManager) {
+        mMockableDataManager = mockableDataManager;
+    }
+
+    public TestComponentRule() {
+        mMockableDataManager = false;
+    }
 
     public TestComponent getTestComponent() {
         return mTestComponent;
@@ -49,14 +65,12 @@ public class TestComponentRule implements TestRule {
     private void setupDaggerTestComponentInApplication() {
         BoilerplateApplication application = BoilerplateApplication
                 .get(InstrumentationRegistry.getTargetContext());
-        if (application.getComponent() instanceof TestComponent) {
-            mTestComponent = (TestComponent) application.getComponent();
-        } else {
-            mTestComponent = DaggerTestComponent.builder()
-                    .applicationTestModule(new ApplicationTestModule(application))
-                    .build();
-            application.setComponent(mTestComponent);
-        }
+        ApplicationTestModule module = new ApplicationTestModule(application,
+                mMockableDataManager);
+        mTestComponent = DaggerTestComponent.builder()
+                .applicationTestModule(module)
+                .build();
+        application.setComponent(mTestComponent);
     }
 
     @Override

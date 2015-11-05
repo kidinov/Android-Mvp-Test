@@ -1,4 +1,4 @@
-package uk.co.ribot.androidboilerplate.injection.module;
+package uk.co.ribot.androidboilerplate.test.common.injection.module;
 
 import android.app.Application;
 
@@ -9,7 +9,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import uk.co.ribot.androidboilerplate.data.DataManager;
-import uk.co.ribot.androidboilerplate.util.TestDataManager;
+import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
+
+import static org.mockito.Mockito.spy;
 
 /**
  * Provides application-level dependencies for an app running on a testing environment
@@ -18,9 +20,11 @@ import uk.co.ribot.androidboilerplate.util.TestDataManager;
 @Module
 public class ApplicationTestModule {
     private final Application mApplication;
+    private boolean mMockableDataManager;
 
-    public ApplicationTestModule(Application application) {
+    public ApplicationTestModule(Application application, boolean mockableDataManager) {
         mApplication = application;
+        mMockableDataManager = mockableDataManager;
     }
 
     @Provides
@@ -32,7 +36,8 @@ public class ApplicationTestModule {
     @Provides
     @Singleton
     DataManager provideDataManager() {
-        return new TestDataManager(mApplication);
+        TestDataManager testDataManager = new TestDataManager(mApplication);
+        return mMockableDataManager ? spy(testDataManager) : testDataManager;
     }
 
     @Provides

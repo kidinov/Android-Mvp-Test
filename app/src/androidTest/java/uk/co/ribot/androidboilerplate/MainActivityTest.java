@@ -6,15 +6,17 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
 import rx.Observable;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.injection.TestComponentRule;
+import uk.co.ribot.androidboilerplate.test.common.ClearDataRule;
+import uk.co.ribot.androidboilerplate.test.common.TestComponentRule;
 import uk.co.ribot.androidboilerplate.ui.activity.MainActivity;
-import uk.co.ribot.androidboilerplate.util.ClearDataRule;
 import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -27,13 +29,15 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    @Rule
+    public final TestComponentRule component = new TestComponentRule(true);
+    public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final ActivityTestRule<MainActivity> main =
             new ActivityTestRule<>(MainActivity.class, false, false);
+
+    // TestComponentRule needs to go first to make sure the Dagger ApplicationTestComponent is set
+    // in the Application before any Activity is launched.
     @Rule
-    public final TestComponentRule component = new TestComponentRule();
-    @Rule
-    public final ClearDataRule clearDataRule = new ClearDataRule(component);
+    public TestRule chain = RuleChain.outerRule(component).around(clearDataRule).around(main);
 
     @Test
     public void listOfRibotsShows() {

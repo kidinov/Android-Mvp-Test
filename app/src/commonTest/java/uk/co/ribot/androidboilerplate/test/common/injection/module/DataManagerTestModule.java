@@ -1,4 +1,4 @@
-package uk.co.ribot.androidboilerplate.injection.module;
+package uk.co.ribot.androidboilerplate.test.common.injection.module;
 
 import android.content.Context;
 

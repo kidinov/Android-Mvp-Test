@@ -1,10 +1,8 @@
-package uk.co.ribot.androidboilerplate.util;
+package uk.co.ribot.androidboilerplate.test.common;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
-import uk.co.ribot.androidboilerplate.injection.TestComponentRule;
 
 /**
  * Test rule that given a TestComponentRule clears the local data such as databases or
