@@ -1,4 +1,4 @@
-package uk.co.ribot.androidboilerplate.util;
+package uk.co.ribot.androidboilerplate.test.common;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,39 +9,43 @@ import uk.co.ribot.androidboilerplate.data.model.Name;
 import uk.co.ribot.androidboilerplate.data.model.Profile;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 
-public class MockModelsUtil {
+/**
+ * Factory class that makes instances of data models with random field values.
+ * The aim of this class is to help setting up test fixtures.
+ */
+public class TestDataFactory {
 
-    public static String randomString() {
+    public static String randomUuid() {
         return UUID.randomUUID().toString();
     }
 
-    public static Ribot createRibot() {
-        return new Ribot(createProfile());
+    public static Ribot makeRibot() {
+        return new Ribot(makeProfile());
     }
 
-    public static List<Ribot> createListRibots(int number) {
+    public static List<Ribot> makeListRibots(int number) {
         List<Ribot> ribots = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            ribots.add(createRibot());
+            ribots.add(makeRibot());
         }
         return ribots;
     }
 
-    public static Profile createProfile() {
+    public static Profile makeProfile() {
         Profile profile = new Profile();
-        profile.email = randomString();
-        profile.name = createName();
+        profile.email = randomUuid();
+        profile.name = makeName();
         profile.dateOfBirth = new Date();
         profile.hexColor = "#0066FF";
         profile.avatar = "http://api.ribot.io/images/" + profile.email;
-        profile.bio = randomString();
+        profile.bio = randomUuid();
         return profile;
     }
 
-    public static Name createName() {
+    public static Name makeName() {
         Name name = new Name();
-        name.first = randomString();
-        name.last = randomString();
+        name.first = randomUuid();
+        name.last = randomUuid();
         return name;
     }
 

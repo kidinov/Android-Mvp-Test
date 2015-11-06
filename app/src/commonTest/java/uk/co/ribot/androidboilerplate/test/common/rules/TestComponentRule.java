@@ -1,7 +1,6 @@
-package uk.co.ribot.androidboilerplate.test.common;
+package uk.co.ribot.androidboilerplate.test.common.rules;
 
-import android.app.Application;
-import android.support.test.InstrumentationRegistry;
+import android.content.Context;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -11,6 +10,7 @@ import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.DaggerTestComponent;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.TestComponent;
 import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTestModule;
@@ -25,6 +25,7 @@ import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTe
 public class TestComponentRule implements TestRule {
 
     private TestComponent mTestComponent;
+    private Context mContext;
     private boolean mMockableDataManager;
 
     /**
@@ -34,16 +35,25 @@ public class TestComponentRule implements TestRule {
      * A full mock DataManager is not an option because there are several methods that still
      * need to return the real value, i.e dataManager.getSubscribeScheduler()
      */
-    public TestComponentRule(boolean mockableDataManager) {
-        mMockableDataManager = mockableDataManager;
+    public TestComponentRule(Context context, boolean mockableDataManager) {
+        init(context, mockableDataManager);
     }
 
-    public TestComponentRule() {
-        mMockableDataManager = false;
+    public TestComponentRule(Context context) {
+        init(context, false);
+    }
+
+    private void init(Context context, boolean mockableDataManager) {
+        mContext = context;
+        mMockableDataManager = mockableDataManager;
     }
 
     public TestComponent getTestComponent() {
         return mTestComponent;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     public TestDataManager getDataManager() {
@@ -63,8 +73,7 @@ public class TestComponentRule implements TestRule {
     }
 
     private void setupDaggerTestComponentInApplication() {
-        BoilerplateApplication application = BoilerplateApplication
-                .get(InstrumentationRegistry.getTargetContext());
+        BoilerplateApplication application = BoilerplateApplication.get(mContext);
         ApplicationTestModule module = new ApplicationTestModule(application,
                 mMockableDataManager);
         mTestComponent = DaggerTestComponent.builder()

@@ -1,5 +1,6 @@
 package uk.co.ribot.androidboilerplate;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,10 +15,10 @@ import java.util.List;
 
 import rx.Observable;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.test.common.ClearDataRule;
-import uk.co.ribot.androidboilerplate.test.common.TestComponentRule;
+import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.test.common.rules.ClearDataRule;
+import uk.co.ribot.androidboilerplate.test.common.rules.TestComponentRule;
 import uk.co.ribot.androidboilerplate.ui.activity.MainActivity;
-import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -29,7 +30,8 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
-    public final TestComponentRule component = new TestComponentRule(true);
+    public final TestComponentRule component =
+            new TestComponentRule(InstrumentationRegistry.getTargetContext(), true);
     public final ClearDataRule clearDataRule = new ClearDataRule(component);
     public final ActivityTestRule<MainActivity> main =
             new ActivityTestRule<>(MainActivity.class, false, false);
@@ -41,7 +43,7 @@ public class MainActivityTest {
 
     @Test
     public void listOfRibotsShows() {
-        List<Ribot> mockRibots = MockModelsUtil.createListRibots(20);
+        List<Ribot> mockRibots = TestDataFactory.makeListRibots(20);
         when(component.getMockRibotsService().getRibots())
                 .thenReturn(Observable.just(mockRibots));
 

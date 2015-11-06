@@ -3,6 +3,7 @@ package uk.co.ribot.androidboilerplate;
 import android.database.Cursor;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -16,8 +17,9 @@ import rx.observers.TestSubscriber;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.Db;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.test.common.rules.TestComponentRule;
 import uk.co.ribot.androidboilerplate.util.DefaultConfig;
-import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -27,15 +29,20 @@ public class DatabaseHelperTest {
 
     private DatabaseHelper mDatabaseHelper;
 
+    @Rule
+    public final TestComponentRule component =
+            new TestComponentRule(RuntimeEnvironment.application);
+
     @Before
     public void setUp() {
-        mDatabaseHelper = new DatabaseHelper(RuntimeEnvironment.application);
+        mDatabaseHelper = component.getDatabaseHelper();
+        mDatabaseHelper.clearTables().subscribe();
     }
 
     @Test
-    public void shouldSetRibots() throws Exception {
-        Ribot ribot1 = MockModelsUtil.createRibot();
-        Ribot ribot2 = MockModelsUtil.createRibot();
+    public void setRibots() {
+        Ribot ribot1 = TestDataFactory.makeRibot();
+        Ribot ribot2 = TestDataFactory.makeRibot();
         List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
 
         TestSubscriber<Ribot> result = new TestSubscriber<>();
@@ -53,9 +60,9 @@ public class DatabaseHelperTest {
     }
 
     @Test
-    public void shouldGetRibots() throws Exception {
-        Ribot ribot1 = MockModelsUtil.createRibot();
-        Ribot ribot2 = MockModelsUtil.createRibot();
+    public void getRibots() {
+        Ribot ribot1 = TestDataFactory.makeRibot();
+        Ribot ribot2 = TestDataFactory.makeRibot();
         List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
 
         mDatabaseHelper.setRibots(ribots).subscribe();
