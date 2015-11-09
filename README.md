@@ -4,14 +4,14 @@ Sample Android app that we use at [ribot](http://ribot.co.uk) as a reference for
 
 Libraries and tools included:
 
-- Support library 22.2
+- Support libraries
 - RecyclerViews and CardViews 
 - [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
-- [Retrofit](http://square.github.io/retrofit/) and [OkHttp](https://github.com/square/okhttp)
+- [Retrofit 2](http://square.github.io/retrofit/)
 - [Dagger 2](http://google.github.io/dagger/)
 - [SqlBrite](https://github.com/square/sqlbrite)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
-- [Timber] (https://github.com/JakeWharton/timber)
+- [Timber](https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)
 - [Otto](http://square.github.io/otto/) event bus
 - Functional tests with [Espresso](https://code.google.com/p/android-test-kit/wiki/Espresso)
@@ -22,10 +22,9 @@ Libraries and tools included:
 ## Requirements
 
 - [Android SDK](http://developer.android.com/sdk/index.html).
-- Android [5.1 (API 22) ](http://developer.android.com/tools/revisions/platforms.html#5.1).
-- Android SDK Tools
-- Android SDK Build tools 22.0.1 
-- Android Support Repository
+- Android [6.0 (API 23) ](http://developer.android.com/tools/revisions/platforms.html#6.0).
+- Latest Android SDK Tools and build tools.
+
 
 ## Architecture
 
