@@ -19,9 +19,9 @@ import rx.observers.TestSubscriber;
 import uk.co.ribot.androidboilerplate.data.local.Db;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
 import uk.co.ribot.androidboilerplate.test.common.rules.ClearDataRule;
 import uk.co.ribot.androidboilerplate.test.common.rules.TestComponentRule;
-import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
 import uk.co.ribot.androidboilerplate.util.DefaultConfig;
 
 import static junit.framework.Assert.assertEquals;

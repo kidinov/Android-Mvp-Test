@@ -10,7 +10,7 @@ import android.text.Html;
 
 import uk.co.ribot.androidboilerplate.R;
 
-public class DialogFactory {
+public final class DialogFactory {
 
     public static Dialog createSimpleOkErrorDialog(Context context, String title, String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context)

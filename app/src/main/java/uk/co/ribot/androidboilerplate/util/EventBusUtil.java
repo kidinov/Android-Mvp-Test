@@ -10,7 +10,7 @@ import rx.functions.Action0;
 /**
  * Provide some extra helper methods to post events to an Otto event Bus.
  */
-public class EventBusUtil {
+public final class EventBusUtil {
 
     /// Helper method to post events from doOnCompleted.
     private Action0 postEventAction(final Bus bus, final Object event) {

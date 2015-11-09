@@ -9,7 +9,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.functions.Func1;
 import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
@@ -25,7 +24,6 @@ public class DataManager {
     @Inject protected DatabaseHelper mDatabaseHelper;
     @Inject protected PreferencesHelper mPreferencesHelper;
     @Inject protected Bus mBus;
-    @Inject protected Scheduler mSubscribeScheduler;
 
     public DataManager(Context context) {
         injectDependencies(context);
@@ -41,10 +39,6 @@ public class DataManager {
 
     public PreferencesHelper getPreferencesHelper() {
         return mPreferencesHelper;
-    }
-
-    public Scheduler getSubscribeScheduler() {
-        return mSubscribeScheduler;
     }
 
     public Observable<Ribot> syncRibots() {

@@ -4,8 +4,6 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
@@ -42,11 +40,5 @@ public class DataManagerTestModule {
     @PerDataManager
     RibotsService provideRibotsService() {
         return mock(RibotsService.class);
-    }
-
-    @Provides
-    @PerDataManager
-    Scheduler provideSubscribeScheduler() {
-        return Schedulers.immediate();
     }
 }

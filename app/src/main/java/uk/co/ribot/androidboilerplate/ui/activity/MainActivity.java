@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.util.SchedulerAppliers;
 import uk.co.ribot.androidboilerplate.data.SyncService;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.ui.adapter.RibotItemViewHolder;
@@ -52,11 +52,11 @@ public class MainActivity extends BaseActivity {
 
     private void loadRibots() {
         mSubscriptions.add(mDataManager.getRibots()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .compose(SchedulerAppliers.<List<Ribot>>defaultSchedulers(this))
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
-                    public void onCompleted() { }
+                    public void onCompleted() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {
