@@ -5,26 +5,9 @@ apply plugin: 'com.neenbedankt.android-apt'
 //TODO uncomment line below after adding fabric api secret and key to fabric.properties
 //apply plugin: 'io.fabric'
 
-//Setup distribution options, based on local variable $ANDROID_DISTRIBUTION
-enum DISTRIBUTION_CHANNEL {
-    CRASHLYTICS, PLAY
-}
-
-def distribution = System.getenv('ANDROID_DISTRIBUTION')
-def distributionChannel
-def distributionGroup
-if (distribution != null) {
-    if (distribution.startsWith('crashlytics')) {
-        distributionChannel = DISTRIBUTION_CHANNEL.CRASHLYTICS
-    } else if (distribution.startsWith('play')) {
-        distributionChannel = DISTRIBUTION_CHANNEL.PLAY
-    }
-    distributionGroup = distribution.substring(distribution.indexOf('-') + 1)
-}
-
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId 'uk.co.ribot.androidboilerplate'
@@ -34,15 +17,6 @@ android {
         versionCode 1000
         // Major -> Millions, Minor -> Thousands, Bugfix -> Hundreds. E.g 1.3.72 == 1,003,072
         versionName '0.1.0'
-
-        def externalVersionNameSuffix = System.getenv('VERSION_NAME_SUFFIX');
-        if (externalVersionNameSuffix != null) versionName += '.' + externalVersionNameSuffix
-
-        if (distributionGroup != null
-                && !(distributionChannel == DISTRIBUTION_CHANNEL.PLAY
-                && distributionGroup.equals('production'))) {
-            versionName += '.' + distribution
-        }
     }
 
     signingConfigs {
@@ -68,19 +42,11 @@ android {
         release {
             signingConfig signingConfigs.release
 
-            /*
-            * By default ProGuard optimizations are disabled. If you want to enable them
-            * replace proguard-android.txt with proguard-android-optimize.txt but make sure you
-            * test thoroughly if you go this route as app may become unstable.
-            */
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            ext.betaDistributionReleaseNotesFilePath = file('../crashlytics_release_notes.txt').absolutePath
-
-            if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.CRASHLYTICS) {
-                ext.betaDistributionGroupAliases = distributionGroup
-            }
+            ext.betaDistributionReleaseNotesFilePath =
+                    file('../crashlytics_release_notes.txt').absolutePath
         }
 
         debug {
@@ -89,46 +55,44 @@ android {
         }
     }
 
-    //Needed because of espresso and robolectric
-    packagingOptions {
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/LICENSE'
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE'
+    sourceSets {
+        def commonTestDir = 'src/commonTest/java'
+        test {
+            java.srcDir commonTestDir
+        }
+        androidTest {
+            java.srcDir commonTestDir
+        }
     }
 
     //Needed because of this https://github.com/square/okio/issues/58
     lintOptions {
         warning 'InvalidPackage'
     }
-
 }
 
 play {
     serviceAccountEmail = 'your-service-account-email'
     pk12File = file('key.p12')
-
-    if (distributionGroup != null && distributionChannel == DISTRIBUTION_CHANNEL.PLAY) {
-        track = distributionGroup
-    }
+    // By default publishes to Alpha channel
+    track = 'alpha'
 }
 
 dependencies {
-    final PLAY_SERVICES_VERSION = '8.1.0'
+    final PLAY_SERVICES_VERSION = '8.3.0'
     final SUPPORT_LIBRARY_VERSION = '23.1.0'
-    final RETROFIT_VERSION = '2.0.0-beta1'
-    final OKHTTP_VERSION = '2.5.0'
-    final DAGGER_VERSION = '2.0.1'
+    final RETROFIT_VERSION = '2.0.0-beta2'
+    final DAGGER_VERSION = '2.0.2'
     final DEXMAKER_VERSION = '1.4'
     final HAMCREST_VERSION = '1.3'
-    final MOCKITO_VERSION = '1.10.19'
     final ESPRESSO_VERSION = '2.2.1'
-    final JUNIT_VERSION = '4.12'
     final RUNNER_VERSION = '0.4'
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    def daggerCompiler = "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
+    def jUnit = "junit:junit:4.12"
+    def mockito = "org.mockito:mockito-core:1.10.19"
 
+    // App Dependencies
     compile "com.google.android.gms:play-services-gcm:$PLAY_SERVICES_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
@@ -140,23 +104,20 @@ dependencies {
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
-    compile "com.squareup.okhttp:okhttp-urlconnection:$OKHTTP_VERSION"
-    compile "com.squareup.okhttp:okhttp:$OKHTTP_VERSION"
     compile 'com.squareup:otto:1.3.8'
-
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
-    compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }
 
     compile  "com.google.dagger:dagger:$DAGGER_VERSION"
-    apt      "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
     provided 'org.glassfish:javax.annotation:10.0-b28' //Required by Dagger2
 
-    androidTestCompile "junit:junit:$JUNIT_VERSION"
+    // Instrumentation test dependencies
+    androidTestCompile jUnit
+    androidTestCompile mockito
     androidTestCompile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION") {
         exclude group: 'com.android.support', module: 'appcompat'
@@ -166,23 +127,22 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
     androidTestCompile "com.android.support.test:runner:$RUNNER_VERSION"
     androidTestCompile "com.android.support.test:rules:$RUNNER_VERSION"
-    androidTestCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
-    // TODO see if it's possibly to migrate to official Google dexmaker when they release v1.4
     androidTestCompile "com.crittercism.dexmaker:dexmaker:$DEXMAKER_VERSION"
     androidTestCompile "com.crittercism.dexmaker:dexmaker-dx:$DEXMAKER_VERSION"
     androidTestCompile "com.crittercism.dexmaker:dexmaker-mockito:$DEXMAKER_VERSION"
 
-    androidTestApt "com.google.dagger:dagger-compiler:$DAGGER_VERSION"
-
-    testCompile "junit:junit:$JUNIT_VERSION"
+    // Unit tests dependencies
+    testCompile jUnit
+    testCompile mockito
     testCompile "org.hamcrest:hamcrest-core:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-library:$HAMCREST_VERSION"
     testCompile "org.hamcrest:hamcrest-integration:$HAMCREST_VERSION"
-    testCompile "org.mockito:mockito-core:$MOCKITO_VERSION"
-    testCompile('org.robolectric:robolectric:3.0') {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    testCompile 'org.robolectric:robolectric:3.0'
+
+    // APT dependencies
+    apt daggerCompiler
+    testApt daggerCompiler
+    androidTestApt daggerCompiler
 }
 
 

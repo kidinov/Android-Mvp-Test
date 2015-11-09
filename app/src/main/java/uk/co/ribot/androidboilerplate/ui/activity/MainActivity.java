@@ -4,32 +4,32 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import butterknife.Bind;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import timber.log.Timber;
-import uk.co.ribot.androidboilerplate.R;
-import uk.co.ribot.androidboilerplate.data.DataManager;
-import uk.co.ribot.androidboilerplate.data.SyncService;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.ui.adapter.RibotItemViewHolder;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Subscriber;
 import rx.subscriptions.CompositeSubscription;
-import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
+import timber.log.Timber;
+import uk.co.ribot.androidboilerplate.R;
+import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.ui.adapter.RibotsAdapter;
+import uk.co.ribot.androidboilerplate.util.SchedulerAppliers;
+import uk.co.ribot.androidboilerplate.data.SyncService;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
 
 public class MainActivity extends BaseActivity {
 
     private CompositeSubscription mSubscriptions;
-    private EasyRecyclerAdapter<Ribot> mRecyclerAdapter;
+    private RibotsAdapter mRibotsAdapter;
 
-    @Inject DataManager mDataManager;
+    @Inject
+    DataManager mDataManager;
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,25 +39,25 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mSubscriptions = new CompositeSubscription();
-        mRecyclerAdapter = new EasyRecyclerAdapter<>(this, RibotItemViewHolder.class);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRibotsAdapter = new RibotsAdapter();
+        mRecyclerView.setAdapter(mRibotsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadRibots();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mSubscriptions.unsubscribe();
+        super.onDestroy();
     }
 
     private void loadRibots() {
         mSubscriptions.add(mDataManager.getRibots()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(mDataManager.getSubscribeScheduler())
+                .compose(SchedulerAppliers.<List<Ribot>>defaultSchedulers(this))
                 .subscribe(new Subscriber<List<Ribot>>() {
                     @Override
-                    public void onCompleted() { }
+                    public void onCompleted() {
+                    }
 
                     @Override
                     public void onError(Throwable e) {
@@ -66,7 +66,8 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onNext(List<Ribot> ribots) {
-                        mRecyclerAdapter.setItems(ribots);
+                        mRibotsAdapter.setRibots(ribots);
+                        mRibotsAdapter.notifyDataSetChanged();
                     }
                 }));
     }

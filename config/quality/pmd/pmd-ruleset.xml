@@ -24,7 +24,10 @@
         <!-- We allow single line if's without braces -->
         <exclude name="IfStmtsMustUseBraces" />
     </rule>
-    <rule ref="rulesets/java/strings.xml" />
+    <rule ref="rulesets/java/strings.xml" >
+        <!-- Exclude because causes problems with SQL Strings that usually require duplication -->
+        <exclude name="AvoidDuplicateLiterals"/>
+    </rule>
     <rule ref="rulesets/java/basic.xml" />
     <rule ref="rulesets/java/naming.xml">
         <exclude name="AbstractNaming" />

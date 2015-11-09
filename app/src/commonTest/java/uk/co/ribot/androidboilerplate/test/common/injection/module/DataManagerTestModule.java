@@ -1,15 +1,13 @@
-package uk.co.ribot.androidboilerplate.injection.module;
+package uk.co.ribot.androidboilerplate.test.common.injection.module;
 
 import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
-import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 
 import static org.mockito.Mockito.mock;
 
@@ -42,11 +40,5 @@ public class DataManagerTestModule {
     @PerDataManager
     RibotsService provideRibotsService() {
         return mock(RibotsService.class);
-    }
-
-    @Provides
-    @PerDataManager
-    Scheduler provideSubscribeScheduler() {
-        return Schedulers.immediate();
     }
 }

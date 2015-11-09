@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.inputmethod.InputMethodManager;
 
-public class ViewUtil {
+public final class ViewUtil {
 
     public static float pxToDp(float px) {
         float densityDpi = Resources.getSystem().getDisplayMetrics().densityDpi;

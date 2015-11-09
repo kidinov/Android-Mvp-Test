@@ -4,15 +4,14 @@ Sample Android app that we use at [ribot](http://ribot.co.uk) as a reference for
 
 Libraries and tools included:
 
-- Support library 22.2
+- Support libraries
 - RecyclerViews and CardViews 
 - [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
-- [Retrofit](http://square.github.io/retrofit/) and [OkHttp](https://github.com/square/okhttp)
+- [Retrofit 2](http://square.github.io/retrofit/)
 - [Dagger 2](http://google.github.io/dagger/)
 - [SqlBrite](https://github.com/square/sqlbrite)
-- [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
-- [Timber] (https://github.com/JakeWharton/timber)
+- [Timber](https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)
 - [Otto](http://square.github.io/otto/) event bus
 - Functional tests with [Espresso](https://code.google.com/p/android-test-kit/wiki/Espresso)
@@ -23,10 +22,9 @@ Libraries and tools included:
 ## Requirements
 
 - [Android SDK](http://developer.android.com/sdk/index.html).
-- Android [5.1 (API 22) ](http://developer.android.com/tools/revisions/platforms.html#5.1).
-- Android SDK Tools
-- Android SDK Build tools 22.0.1 
-- Android Support Repository
+- Android [6.0 (API 23) ](http://developer.android.com/tools/revisions/platforms.html#6.0).
+- Latest Android SDK Tools and build tools.
+
 
 ## Architecture
 
@@ -91,19 +89,26 @@ This will run all the code analysis tools and unit tests in the following order:
 
 The project can be distributed using either [Crashlytics](http://support.crashlytics.com/knowledgebase/articles/388925-beta-distributions-with-gradle) or the [Google Play Store](https://github.com/Triple-T/gradle-play-publisher).
 
-To do this, set up a local variable `$ANDROID_DISTRIBUTION` to any of the following values:
+### Play Store
 
-    play-production
-    play-alpha
-    play-beta
-    crashlytics-yourgroupname
-    crashlytics-yourgroupname2
+We use the __Gradle Play Publisher__ plugin. Once set up correctly, you will be able to push new builds to
+the Alpha, Beta or production channels like this
 
-    etc
+```
+./gradlew publishApkRelease
+```
+Read [plugin documentation](https://github.com/Triple-T/gradle-play-publisher) for more info.
 
-Then use the following command e.g. on your CI server:
+### Crashlytics
 
-    ./gradlew clean check connectedAndroidTest assembleRelease $(if [[ $ANDROID_DISTRIBUTION == crashlytics-* ]]; then echo crashlyticsUploadDistributionRelease; else echo publishApkRelease; fi )
+You can also use Fabric's Crashlytics for distributing beta releases. Remember to add your fabric
+account details to `app/src/fabric.properties`.
+
+To upload a release build to Crashlytics run:
+
+```
+./gradlew assembleRelease crashlyticsUploadDistributionRelease
+```
 
 ## New project setup 
 

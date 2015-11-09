@@ -16,11 +16,10 @@
 #   public *;
 #}
 
-
 # ButterKnife rules
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
+-keep class **$$ViewBinder { *; }
 
 -keepclasseswithmembernames class * {
     @butterknife.* <fields>;
@@ -46,8 +45,11 @@
     @com.squareup.otto.Produce public *;
 }
 
-# Related to RxJava
+# RxJava rules
+# RxAndroid will soon ship with rules so this may not be needed in the future
+# https://github.com/ReactiveX/RxAndroid/issues/219
 -dontwarn sun.misc.Unsafe
+-keep class rx.internal.util.unsafe.** { *; }
 
 # EasyAdapter rules
 -keepclassmembers class * extends uk.co.ribot.easyadapter.ItemViewHolder {
@@ -57,9 +59,14 @@
 # Gson rules
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
+# TODO change to match your package model
 # Keep non static or private fields of models so Gson can find their names
-# TODO change this to match your models package
 -keepclassmembers class uk.co.ribot.androidboilerplate.data.model.** {
+    !static !private <fields>;
+}
+# TODO change to match your Retrofit services (only if using inner models withing the service)
+# Some models used by gson are inner classes inside the retrofit service
+-keepclassmembers class uk.co.ribot.androidboilerplate.data.remote.RibotsService$** {
     !static !private <fields>;
 }
 

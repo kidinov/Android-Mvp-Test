@@ -3,18 +3,8 @@ package uk.co.ribot.androidboilerplate;
 
 import android.database.Cursor;
 
-import com.squareup.otto.Bus;
-
-import uk.co.ribot.androidboilerplate.data.DataManager;
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.Db;
-import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.util.DefaultConfig;
-import uk.co.ribot.androidboilerplate.util.MockModelsUtil;
-
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -26,40 +16,39 @@ import java.util.List;
 
 import rx.Observable;
 import rx.observers.TestSubscriber;
-import rx.schedulers.Schedulers;
+import uk.co.ribot.androidboilerplate.data.local.Db;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
+import uk.co.ribot.androidboilerplate.test.common.rules.ClearDataRule;
+import uk.co.ribot.androidboilerplate.test.common.rules.TestComponentRule;
+import uk.co.ribot.androidboilerplate.util.DefaultConfig;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
 public class DataManagerTest {
 
-    private DataManager mDataManager;
-    private RibotsService mMockRibotsService;
-    private Bus mMockBus;
-    private DatabaseHelper mDatabaseHelper;
-    private PreferencesHelper mPreferencesHelper;
+    private TestDataManager mDataManager;
+
+    @Rule
+    public final TestComponentRule component =
+            new TestComponentRule(RuntimeEnvironment.application);
+    @Rule
+    public final ClearDataRule clearDataRule = new ClearDataRule(component);
 
     @Before
     public void setUp() {
-        mMockRibotsService = mock(RibotsService.class);
-        mMockBus = mock(Bus.class);
-        mDatabaseHelper = new DatabaseHelper(RuntimeEnvironment.application);
-        mPreferencesHelper = new PreferencesHelper(RuntimeEnvironment.application);
-        mDataManager = new DataManager(mMockRibotsService,
-                mDatabaseHelper,
-                mMockBus,
-                mPreferencesHelper,
-                Schedulers.immediate());
+        mDataManager = component.getDataManager();
     }
 
     @Test
-    public void shouldSyncRibots() throws Exception {
-        List<Ribot> ribots = Arrays.asList(MockModelsUtil.createRibot(),
-                MockModelsUtil.createRibot());
-        when(mMockRibotsService.getRibots())
+    public void syncRibots() {
+        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot(),
+                TestDataFactory.makeRibot());
+        when(component.getMockRibotsService().getRibots())
                 .thenReturn(Observable.just(ribots));
 
         TestSubscriber<Ribot> result = new TestSubscriber<>();
@@ -67,11 +56,10 @@ public class DataManagerTest {
         result.assertNoErrors();
         result.assertReceivedOnNext(ribots);
 
-        Cursor cursor = mDatabaseHelper.getBriteDb()
-                .query("SELECT * FROM " + Db.RibotsTable.TABLE_NAME);
+        Cursor cursor = component.getDatabaseHelper().getBriteDb()
+                .query("SELECT * FROM " + Db.RibotProfileTable.TABLE_NAME);
         assertEquals(2, cursor.getCount());
         cursor.close();
     }
-
 
 }

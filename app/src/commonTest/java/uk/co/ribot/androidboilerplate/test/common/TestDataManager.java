@@ -1,4 +1,4 @@
-package uk.co.ribot.androidboilerplate.util;
+package uk.co.ribot.androidboilerplate.test.common;
 
 import android.content.Context;
 
@@ -6,9 +6,9 @@ import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.component.TestComponent;
-import uk.co.ribot.androidboilerplate.injection.component.DaggerDataManagerTestComponent;
-import uk.co.ribot.androidboilerplate.injection.module.DataManagerTestModule;
+import uk.co.ribot.androidboilerplate.test.common.injection.component.DaggerDataManagerTestComponent;
+import uk.co.ribot.androidboilerplate.test.common.injection.component.TestComponent;
+import uk.co.ribot.androidboilerplate.test.common.injection.module.DataManagerTestModule;
 
 /**
  * Extension of DataManager to be used on a testing environment.

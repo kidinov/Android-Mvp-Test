@@ -2,8 +2,7 @@ package uk.co.ribot.androidboilerplate.data.local;
 
 import android.content.Context;
 import android.database.Cursor;
-
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -14,6 +13,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
 
 public class DatabaseHelper {
 
@@ -56,10 +56,11 @@ public class DatabaseHelper {
             public void call(Subscriber<? super Ribot> subscriber) {
                 BriteDatabase.Transaction transaction = mDb.newTransaction();
                 try {
-                    deleteAllRibotsApartFrom(newRibots);
+                    mDb.delete(Db.RibotProfileTable.TABLE_NAME, null);
                     for (Ribot ribot : newRibots) {
-                        long result = mDb.insert(Db.RibotsTable.TABLE_NAME,
-                                Db.RibotsTable.toContentValues(ribot));
+                        long result = mDb.insert(Db.RibotProfileTable.TABLE_NAME,
+                                Db.RibotProfileTable.toContentValues(ribot.profile),
+                                SQLiteDatabase.CONFLICT_REPLACE);
                         if (result >= 0) subscriber.onNext(ribot);
                     }
                     transaction.markSuccessful();
@@ -72,38 +73,14 @@ public class DatabaseHelper {
     }
 
     public Observable<List<Ribot>> getRibots() {
-        return mDb.createQuery(Db.RibotsTable.TABLE_NAME,
-                "SELECT * FROM " + Db.RibotsTable.TABLE_NAME)
+        return mDb.createQuery(Db.RibotProfileTable.TABLE_NAME,
+                "SELECT * FROM " + Db.RibotProfileTable.TABLE_NAME)
                 .mapToList(new Func1<Cursor, Ribot>() {
                     @Override
                     public Ribot call(Cursor cursor) {
-                        return Db.RibotsTable.parseCursor(cursor);
+                        return new Ribot(Db.RibotProfileTable.parseCursor(cursor));
                     }
                 });
-    }
-
-    private void deleteAllRibotsApartFrom(Collection<Ribot> ribotsToKeep) {
-        if (ribotsToKeep.isEmpty()) {
-            mDb.delete(Db.RibotsTable.TABLE_NAME, null);
-        } else {
-            mDb.delete(Db.RibotsTable.TABLE_NAME,
-                    Db.RibotsTable.COLUMN_ID +
-                            " NOT IN (" + createPlaceholders(ribotsToKeep.size()) + ")",
-                    Ribot.getIds(ribotsToKeep));
-        }
-    }
-
-    private String createPlaceholders(int length) {
-        if (length < 1) {
-            throw new RuntimeException("No placeholders");
-        } else {
-            StringBuilder sb = new StringBuilder(length * 2 - 1);
-            sb.append('?');
-            for (int i = 1; i < length; i++) {
-                sb.append(",?");
-            }
-            return sb.toString();
-        }
     }
 
 }
