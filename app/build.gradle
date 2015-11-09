@@ -108,7 +108,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
-    compile 'uk.co.ribot:easyadapter:1.5.0@aar'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
         transitive = true;
     }

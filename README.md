@@ -10,7 +10,6 @@ Libraries and tools included:
 - [Retrofit](http://square.github.io/retrofit/) and [OkHttp](https://github.com/square/okhttp)
 - [Dagger 2](http://google.github.io/dagger/)
 - [SqlBrite](https://github.com/square/sqlbrite)
-- [EasyAdapter](https://github.com/ribot/easy-adapter)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber] (https://github.com/JakeWharton/timber)
 - [Picasso](http://square.github.io/picasso/)

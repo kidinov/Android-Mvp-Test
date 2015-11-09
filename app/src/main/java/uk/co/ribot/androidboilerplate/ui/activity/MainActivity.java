@@ -15,20 +15,21 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.ui.adapter.RibotsAdapter;
 import uk.co.ribot.androidboilerplate.util.SchedulerAppliers;
 import uk.co.ribot.androidboilerplate.data.SyncService;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.ui.adapter.RibotItemViewHolder;
-import uk.co.ribot.easyadapter.EasyRecyclerAdapter;
 
 public class MainActivity extends BaseActivity {
 
     private CompositeSubscription mSubscriptions;
-    private EasyRecyclerAdapter<Ribot> mRecyclerAdapter;
+    private RibotsAdapter mRibotsAdapter;
 
-    @Inject DataManager mDataManager;
+    @Inject
+    DataManager mDataManager;
 
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    @Bind(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +39,16 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mSubscriptions = new CompositeSubscription();
-        mRecyclerAdapter = new EasyRecyclerAdapter<>(this, RibotItemViewHolder.class);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRibotsAdapter = new RibotsAdapter();
+        mRecyclerView.setAdapter(mRibotsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         loadRibots();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         mSubscriptions.unsubscribe();
+        super.onDestroy();
     }
 
     private void loadRibots() {
@@ -65,7 +66,8 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onNext(List<Ribot> ribots) {
-                        mRecyclerAdapter.setItems(ribots);
+                        mRibotsAdapter.setRibots(ribots);
+                        mRibotsAdapter.notifyDataSetChanged();
                     }
                 }));
     }
