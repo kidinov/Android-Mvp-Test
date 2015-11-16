@@ -18,8 +18,7 @@ import uk.co.ribot.androidboilerplate.util.SchedulerAppliers;
 
 public class MainPresenter extends BasePresenter<MainMvpView> {
 
-    @Inject
-    protected DataManager mDataManager;
+    @Inject protected DataManager mDataManager;
     private Subscription mSubscription;
 
     public MainPresenter(Context context) {

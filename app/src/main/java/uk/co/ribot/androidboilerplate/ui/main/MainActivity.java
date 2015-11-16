@@ -20,12 +20,10 @@ import uk.co.ribot.androidboilerplate.util.DialogFactory;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
-    @Inject
-    protected MainPresenter mMainPresenter;
+    @Inject MainPresenter mMainPresenter;
     private RibotsAdapter mRibotsAdapter;
 
-    @Bind(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
