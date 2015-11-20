@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.IBinder;
 
 import javax.inject.Inject;
@@ -12,7 +13,6 @@ import rx.Observer;
 import rx.Subscription;
 import timber.log.Timber;
 import uk.co.ribot.androidboilerplate.BoilerplateApplication;
-import uk.co.ribot.androidboilerplate.BuildConfig;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.util.AndroidComponentUtil;
 import uk.co.ribot.androidboilerplate.util.NetworkUtil;
@@ -88,10 +88,9 @@ public class SyncService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (NetworkUtil.isNetworkConnected(context)) {
-                if (BuildConfig.DEBUG) {
-                    Timber.i("Connection is now available, triggering sync...");
-                }
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)
+                    && NetworkUtil.isNetworkConnected(context)) {
+                Timber.i("Connection is now available, triggering sync...");
                 AndroidComponentUtil.toggleComponent(context, this.getClass(), false);
                 context.startService(getStartIntent(context));
             }
