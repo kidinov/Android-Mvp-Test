@@ -1,5 +1,6 @@
 package uk.co.ribot.androidboilerplate.injection.module;
 
+import android.app.Application;
 import android.content.Context;
 
 import dagger.Module;
@@ -15,22 +16,24 @@ import uk.co.ribot.androidboilerplate.injection.scope.PerDataManager;
 @Module
 public class DataManagerModule {
 
-    private final Context mContext;
+    private final Application mApplication;
 
-    public DataManagerModule(Context context) {
-        mContext = context;
+    // DataManager is a singleton class that don't depend on any Context apart from the Application
+    // by taking an application instead of a context we prevent Activity leaks
+    public DataManagerModule(Application application) {
+        mApplication = application;
     }
 
     @Provides
     @PerDataManager
     DatabaseHelper provideDatabaseHelper() {
-        return new DatabaseHelper(mContext);
+        return new DatabaseHelper(mApplication);
     }
 
     @Provides
     @PerDataManager
     PreferencesHelper providePreferencesHelper() {
-        return new PreferencesHelper(mContext);
+        return new PreferencesHelper(mApplication);
     }
 
     @Provides

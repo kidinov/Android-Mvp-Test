@@ -21,7 +21,6 @@ public class BaseActivity extends AppCompatActivity {
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
                     .applicationComponent(BoilerplateApplication.get(this).getComponent())
-                    .presentersModule(new PresentersModule(this))
                     .build();
         }
         return mActivityComponent;

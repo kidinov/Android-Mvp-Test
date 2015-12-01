@@ -1,6 +1,5 @@
 package uk.co.ribot.androidboilerplate.util;
 
-import android.content.Context;
 
 /**
  * Provide singleton instances of common SchedulerAppliers that can be used across the application
@@ -20,9 +19,9 @@ public final class SchedulerAppliers {
      * subscribeOn and observeOn schedulers.
      */
     @SuppressWarnings("unchecked")
-    public static <T> SchedulerApplier<T> defaultSchedulers(Context context) {
+    public static <T> SchedulerApplier<T> defaultSchedulers() {
         if (mSchedulerApplierAll == null) {
-            mSchedulerApplierAll = new SchedulerApplier<T>(context);
+            mSchedulerApplierAll = new SchedulerApplier<>();
         }
         return mSchedulerApplierAll;
     }
@@ -32,10 +31,9 @@ public final class SchedulerAppliers {
      * subscribeOn scheduler.
      */
     @SuppressWarnings("unchecked")
-    public static <T> SchedulerApplier<T> defaultSubscribeScheduler(Context context) {
+    public static <T> SchedulerApplier<T> defaultSubscribeScheduler() {
         if (mSchedulerApplierSubscribe == null) {
-            mSchedulerApplierSubscribe = new SchedulerApplier<T>(context,
-                    SchedulerApplier.DEFAULT_SUBSCRIBE);
+            mSchedulerApplierSubscribe = new SchedulerApplier<>(SchedulerApplier.DEFAULT_SUBSCRIBE);
         }
         return mSchedulerApplierSubscribe;
     }

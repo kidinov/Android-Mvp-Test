@@ -19,7 +19,7 @@ import uk.co.ribot.androidboilerplate.util.SchedulerApplier;
 public interface ApplicationComponent {
 
     void inject(SyncService syncService);
-    void inject(SchedulerApplier.DefaultSchedulers defaultSchedulers);
+
     void inject(MainPresenter mainPresenter);
 
     Application application();

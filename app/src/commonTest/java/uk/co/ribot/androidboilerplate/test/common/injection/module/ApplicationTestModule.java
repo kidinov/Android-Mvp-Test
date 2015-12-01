@@ -11,6 +11,7 @@ import dagger.Provides;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 /**
@@ -37,7 +38,7 @@ public class ApplicationTestModule {
     @Singleton
     DataManager provideDataManager() {
         TestDataManager testDataManager = new TestDataManager(mApplication);
-        return mMockableDataManager ? spy(testDataManager) : testDataManager;
+        return mMockableDataManager ? mock(DataManager.class) : testDataManager;
     }
 
     @Provides

@@ -1,7 +1,5 @@
 package uk.co.ribot.androidboilerplate.util;
 
-
-import android.content.Context;
 import android.support.annotation.IntDef;
 
 import java.lang.annotation.Retention;
@@ -12,7 +10,6 @@ import javax.inject.Named;
 
 import rx.Observable;
 import rx.Scheduler;
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.injection.module.DefaultSchedulersModule;
 
 /**
@@ -44,8 +41,8 @@ public final class SchedulerApplier<T> implements Observable.Transformer<T, T> {
      * schedulers when running tests. During tests Schedulers.immediate() becomes the
      * default observeOn scheduler ensuring that the observable runs in the same thread as the tests
      */
-    public SchedulerApplier(Context context) {
-        mDefaultSchedulers = new DefaultSchedulers(context);
+    public SchedulerApplier() {
+        mDefaultSchedulers = new DefaultSchedulers();
         mApplyTarget = DEFAULT_ALL;
     }
 
@@ -58,8 +55,8 @@ public final class SchedulerApplier<T> implements Observable.Transformer<T, T> {
      *                    DEFAULT_SUBSCRIBE: subscribeOn(io())
      *                    DEFAULT_OBSERVE: observeOn(mainThread())
      */
-    public SchedulerApplier(Context context, @ApplyTarget int applyTarget) {
-        mDefaultSchedulers = new DefaultSchedulers(context);
+    public SchedulerApplier(@ApplyTarget int applyTarget) {
+        mDefaultSchedulers = new DefaultSchedulers();
         mApplyTarget = applyTarget;
     }
 
@@ -98,8 +95,7 @@ public final class SchedulerApplier<T> implements Observable.Transformer<T, T> {
         @Named(DefaultSchedulersModule.Names.SCHEDULER_SUBSCRIBE_ON)
         Scheduler subscribeOnScheduler;
 
-        public DefaultSchedulers(Context context) {
-            BoilerplateApplication.get(context).getComponent().inject(this);
+        public DefaultSchedulers() {
         }
 
         public DefaultSchedulers(Scheduler observeOnScheduler, Scheduler subscribeOnScheduler) {

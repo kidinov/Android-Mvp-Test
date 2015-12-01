@@ -50,7 +50,7 @@ public class SyncService extends Service {
 
         if (mSubscription != null && !mSubscription.isUnsubscribed()) mSubscription.unsubscribe();
         mSubscription = mDataManager.syncRibots()
-                .compose(SchedulerAppliers.<Ribot>defaultSubscribeScheduler(this))
+                .compose(SchedulerAppliers.<Ribot>defaultSubscribeScheduler())
                 .subscribe(new Observer<Ribot>() {
                     @Override
                     public void onCompleted() {

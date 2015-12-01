@@ -1,6 +1,8 @@
 package uk.co.ribot.androidboilerplate.data;
 
+import android.app.Application;
 import android.content.Context;
+import android.test.mock.MockApplication;
 
 import com.squareup.otto.Bus;
 
@@ -25,14 +27,14 @@ public class DataManager {
     @Inject protected PreferencesHelper mPreferencesHelper;
     @Inject protected Bus mBus;
 
-    public DataManager(Context context) {
-        injectDependencies(context);
+    public DataManager(Application application) {
+        injectDependencies(application);
     }
 
-    protected void injectDependencies(Context context) {
+    protected void injectDependencies(Application application) {
         DaggerDataManagerComponent.builder()
-                .applicationComponent(BoilerplateApplication.get(context).getComponent())
-                .dataManagerModule(new DataManagerModule(context))
+                .applicationComponent(((BoilerplateApplication) application).getComponent())
+                .dataManagerModule(new DataManagerModule(application))
                 .build()
                 .inject(this);
     }
