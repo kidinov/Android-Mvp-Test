@@ -1,7 +1,6 @@
 package uk.co.ribot.androidboilerplate.injection.module;
 
 import android.app.Application;
-import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;

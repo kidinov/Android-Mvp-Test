@@ -10,14 +10,13 @@ import java.util.List;
 
 import rx.Observable;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
-import uk.co.ribot.androidboilerplate.util.MockDependenciesHelper;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.test.common.runner.RxJavaTestRunner;
 import uk.co.ribot.androidboilerplate.ui.main.MainMvpView;
 import uk.co.ribot.androidboilerplate.ui.main.MainPresenter;
-import uk.co.ribot.androidboilerplate.test.common.runner.RxJavaTestRunner;
+import uk.co.ribot.androidboilerplate.util.MockDependenciesHelper;
 
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -51,7 +50,7 @@ public class MainPresenterTest {
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibots(ribots);
         verify(mMockMainMvpView, never()).showRibotsEmpty();
-        verify(mMockMainMvpView, never()).showError(anyString());
+        verify(mMockMainMvpView, never()).showError();
     }
 
     @Test
@@ -63,7 +62,7 @@ public class MainPresenterTest {
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibotsEmpty();
         verify(mMockMainMvpView, never()).showRibots(anyListOf(Ribot.class));
-        verify(mMockMainMvpView, never()).showError(anyString());
+        verify(mMockMainMvpView, never()).showError();
     }
 
     @Test
@@ -73,7 +72,7 @@ public class MainPresenterTest {
                 .getRibots();
 
         mMainPresenter.loadRibots();
-        verify(mMockMainMvpView).showError(anyString());
+        verify(mMockMainMvpView).showError();
         verify(mMockMainMvpView, never()).showRibotsEmpty();
         verify(mMockMainMvpView, never()).showRibots(anyListOf(Ribot.class));
     }

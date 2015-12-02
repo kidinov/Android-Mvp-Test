@@ -1,8 +1,6 @@
 package uk.co.ribot.androidboilerplate.data;
 
 import android.app.Application;
-import android.content.Context;
-import android.test.mock.MockApplication;
 
 import com.squareup.otto.Bus;
 

@@ -29,8 +29,10 @@ public class MockDependenciesHelper {
 
     public MockDependenciesHelper() {
         mMockApplication = Mockito.mock(BoilerplateApplication.class);
+        ApplicationTestModule applicationTestModule = new ApplicationTestModule(mMockApplication,
+                ApplicationTestModule.DataManagerTestStrategy.MOCK);
         mTestComponent = DaggerTestComponent.builder()
-                .applicationTestModule(new ApplicationTestModule(mMockApplication, true))
+                .applicationTestModule(applicationTestModule)
                 .build();
 
         when(mMockApplication.getComponent())
