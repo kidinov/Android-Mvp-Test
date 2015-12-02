@@ -38,7 +38,7 @@ public class ApplicationTestModule {
     @Singleton
     DataManager provideDataManager() {
         TestDataManager testDataManager = new TestDataManager(mApplication);
-        return mMockableDataManager ? mock(DataManager.class) : testDataManager;
+        return mMockableDataManager ? spy(testDataManager) : testDataManager;
     }
 
     @Provides

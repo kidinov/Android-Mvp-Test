@@ -49,8 +49,7 @@ public class MainPresenter extends BasePresenter<MainMvpView> {
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e, "There was an error loading the ribots.");
-                        //todo String errorString = getContext().getString(R.string.error_loading_ribots);
-                        getMvpView().showError("todo change");
+                        getMvpView().showError();
                     }
 
                     @Override

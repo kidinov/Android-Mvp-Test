@@ -20,6 +20,7 @@ public class BaseActivity extends AppCompatActivity {
     public ActivityComponent getActivityComponent() {
         if (mActivityComponent == null) {
             mActivityComponent = DaggerActivityComponent.builder()
+                    .presentersModule(new PresentersModule(getApplication()))
                     .applicationComponent(BoilerplateApplication.get(this).getComponent())
                     .build();
         }
