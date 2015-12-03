@@ -1,7 +1,8 @@
-package uk.co.ribot.androidboilerplate.test.common.runner;
+package uk.co.ribot.androidboilerplate.runner;
 
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.lang.reflect.InvocationTargetException;
 
 import rx.Scheduler;
 import rx.android.plugins.RxAndroidPlugins;
@@ -12,12 +13,12 @@ import rx.schedulers.Schedulers;
 
 /**
  * Ensures that RxJava Observables always subscribe and observe on immediate() during testing.
- * This test runner extends the default JUnit4 tests runner and registers RxJava and RxAndroid
+ * This test runner extends the MockitoJUnitRunner tests runner and registers RxJava and RxAndroid
  * scheduler hooks so that it overrides the default schedulers returned.
  */
-public class RxJavaTestRunner extends BlockJUnit4ClassRunner {
+public class RxMockitoJUnitRunner extends MockitoJUnitRunner {
 
-    public RxJavaTestRunner(Class<?> paramClass) throws InitializationError {
+    public RxMockitoJUnitRunner(Class<?> paramClass) throws InvocationTargetException {
         super(paramClass);
         RxJavaPlugins.getInstance().registerSchedulersHook(new RxJavaSchedulersHook() {
             @Override

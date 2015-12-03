@@ -1,10 +1,5 @@
 package uk.co.ribot.androidboilerplate.ui.base;
 
-import android.app.Application;
-
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
-import uk.co.ribot.androidboilerplate.injection.component.ApplicationComponent;
-
 /**
  * Base class that implements the Presenter interface and provides a base implementation for
  * attachView() and detachView(). It also handles keeping a reference to the mvpView that
@@ -13,11 +8,6 @@ import uk.co.ribot.androidboilerplate.injection.component.ApplicationComponent;
 public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     private T mMvpView;
-    private Application mApplication;
-
-    public BasePresenter(Application application) {
-        mApplication = application;
-    }
 
     @Override
     public void attachView(T mvpView) {
@@ -35,10 +25,6 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     public T getMvpView() {
         return mMvpView;
-    }
-
-    public ApplicationComponent getApplicationComponent() {
-        return ((BoilerplateApplication) mApplication).getComponent();
     }
 
     public void checkViewAttached() {

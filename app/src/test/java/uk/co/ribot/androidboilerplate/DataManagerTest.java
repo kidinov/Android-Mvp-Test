@@ -1,16 +1,24 @@
 package uk.co.ribot.androidboilerplate;
 
+import com.squareup.otto.Bus;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
 import rx.observers.TestSubscriber;
+import uk.co.ribot.androidboilerplate.data.DataManager;
+import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
+import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
-import uk.co.ribot.androidboilerplate.test.common.TestDataManager;
-import uk.co.ribot.androidboilerplate.util.MockDependenciesHelper;
 
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.never;
@@ -25,16 +33,25 @@ import static org.mockito.Mockito.when;
  * 3. Optionally write a SEPARATE test that verifies that your method is calling the right helper
  * using Mockito.verify()
  */
+@RunWith(MockitoJUnitRunner.class)
 public class DataManagerTest {
 
-    private final MockDependenciesHelper mMockDependenciesHelper = new MockDependenciesHelper();
-    private final TestDataManager mDataManager =
-            new TestDataManager(mMockDependenciesHelper.getMockApplication());
+    @Mock DatabaseHelper mMockDatabaseHelper;
+    @Mock PreferencesHelper mMockPreferencesHelper;
+    @Mock RibotsService mMockRibotsService;
+    private final Bus mBus = new Bus();
+    private DataManager mDataManager;
+
+    @Before
+    public void setUp() {
+        mDataManager = new DataManager(mMockRibotsService, mBus, mMockPreferencesHelper,
+                mMockDatabaseHelper);
+    }
 
     @Test
     public void syncRibotsEmitsValues() {
-        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot(),
-                TestDataFactory.makeRibot());
+        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot("r1"),
+                TestDataFactory.makeRibot("r2"));
         stubSyncRibotsHelperCalls(ribots);
 
         TestSubscriber<Ribot> result = new TestSubscriber<>();
@@ -45,32 +62,32 @@ public class DataManagerTest {
 
     @Test
     public void syncRibotsCallsApiAndDatabase() {
-        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot(),
-                TestDataFactory.makeRibot());
+        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot("r1"),
+                TestDataFactory.makeRibot("r2"));
         stubSyncRibotsHelperCalls(ribots);
 
         mDataManager.syncRibots().subscribe();
         // Verify right calls to helper methods
-        verify(mDataManager.getRibotsService()).getRibots();
-        verify(mDataManager.getDatabaseHelper()).setRibots(ribots);
+        verify(mMockRibotsService).getRibots();
+        verify(mMockDatabaseHelper).setRibots(ribots);
     }
 
     @Test
     public void syncRibotsDoesNotCallDatabaseWhenApiFails() {
-        when(mDataManager.getRibotsService().getRibots())
+        when(mMockRibotsService.getRibots())
                 .thenReturn(Observable.<List<Ribot>>error(new RuntimeException()));
 
         mDataManager.syncRibots().subscribe(new TestSubscriber<Ribot>());
         // Verify right calls to helper methods
-        verify(mDataManager.getRibotsService()).getRibots();
-        verify(mDataManager.getDatabaseHelper(), never()).setRibots(anyListOf(Ribot.class));
+        verify(mMockRibotsService).getRibots();
+        verify(mMockDatabaseHelper, never()).setRibots(anyListOf(Ribot.class));
     }
 
     private void stubSyncRibotsHelperCalls(List<Ribot> ribots) {
         // Stub calls to the ribot service and database helper.
-        when(mDataManager.getRibotsService().getRibots())
+        when(mMockRibotsService.getRibots())
                 .thenReturn(Observable.just(ribots));
-        when(mDataManager.getDatabaseHelper().setRibots(ribots))
+        when(mMockDatabaseHelper.setRibots(ribots))
                 .thenReturn(Observable.from(ribots));
     }
 

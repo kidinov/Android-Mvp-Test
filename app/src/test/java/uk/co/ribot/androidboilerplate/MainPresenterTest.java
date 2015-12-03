@@ -4,39 +4,39 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
+import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.runner.RxMockitoJUnitRunner;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
-import uk.co.ribot.androidboilerplate.test.common.runner.RxJavaTestRunner;
 import uk.co.ribot.androidboilerplate.ui.main.MainMvpView;
 import uk.co.ribot.androidboilerplate.ui.main.MainPresenter;
-import uk.co.ribot.androidboilerplate.util.MockDependenciesHelper;
 
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@RunWith(RxJavaTestRunner.class)
+@RunWith(RxMockitoJUnitRunner.class)
 public class MainPresenterTest {
 
-    private final MainMvpView mMockMainMvpView = mock(MainMvpView.class);
-    private final MockDependenciesHelper mMockDependenciesHelper = new MockDependenciesHelper();
-    private final MainPresenter mMainPresenter =
-            new MainPresenter(mMockDependenciesHelper.getMockApplication());
+    @Mock MainMvpView mMockMainMvpView;
+    @Mock DataManager mMockDataManager;
+    private MainPresenter mMainPresenter;
 
     @Before
-    public void attachView() {
+    public void setUp() {
+        mMainPresenter = new MainPresenter(mMockDataManager);
         mMainPresenter.attachView(mMockMainMvpView);
     }
 
     @After
-    public void detachView() {
+    public void tearDown() {
         mMainPresenter.detachView();
     }
 
@@ -44,7 +44,7 @@ public class MainPresenterTest {
     public void loadRibotsReturnsRibots() {
         List<Ribot> ribots = TestDataFactory.makeListRibots(10);
         doReturn(Observable.just(ribots))
-                .when(mMockDependenciesHelper.getMockDataManager())
+                .when(mMockDataManager)
                 .getRibots();
 
         mMainPresenter.loadRibots();
@@ -56,7 +56,7 @@ public class MainPresenterTest {
     @Test
     public void loadRibotsReturnsEmptyList() {
         doReturn(Observable.just(Collections.emptyList()))
-                .when(mMockDependenciesHelper.getMockDataManager())
+                .when(mMockDataManager)
                 .getRibots();
 
         mMainPresenter.loadRibots();
@@ -68,7 +68,7 @@ public class MainPresenterTest {
     @Test
     public void loadRibotsFails() {
         doReturn(Observable.error(new RuntimeException()))
-                .when(mMockDependenciesHelper.getMockDataManager())
+                .when(mMockDataManager)
                 .getRibots();
 
         mMainPresenter.loadRibots();

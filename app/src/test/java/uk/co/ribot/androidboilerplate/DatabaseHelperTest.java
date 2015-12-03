@@ -44,8 +44,8 @@ public class DatabaseHelperTest {
 
     @Test
     public void setRibots() {
-        Ribot ribot1 = TestDataFactory.makeRibot();
-        Ribot ribot2 = TestDataFactory.makeRibot();
+        Ribot ribot1 = TestDataFactory.makeRibot("r1");
+        Ribot ribot2 = TestDataFactory.makeRibot("r2");
         List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
 
         TestSubscriber<Ribot> result = new TestSubscriber<>();
@@ -64,8 +64,8 @@ public class DatabaseHelperTest {
 
     @Test
     public void getRibots() {
-        Ribot ribot1 = TestDataFactory.makeRibot();
-        Ribot ribot2 = TestDataFactory.makeRibot();
+        Ribot ribot1 = TestDataFactory.makeRibot("r1");
+        Ribot ribot2 = TestDataFactory.makeRibot("r2");
         List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
 
         mDatabaseHelper.setRibots(ribots).subscribe();

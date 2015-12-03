@@ -1,7 +1,5 @@
 package uk.co.ribot.androidboilerplate.ui.main;
 
-import android.app.Application;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,17 +15,17 @@ import uk.co.ribot.androidboilerplate.ui.base.BasePresenter;
 
 public class MainPresenter extends BasePresenter<MainMvpView> {
 
-    @Inject protected DataManager mDataManager;
+    private final DataManager mDataManager;
     private Subscription mSubscription;
 
-    public MainPresenter(Application application) {
-        super(application);
+    @Inject
+    public MainPresenter(DataManager dataManager) {
+        mDataManager = dataManager;
     }
 
     @Override
     public void attachView(MainMvpView mvpView) {
         super.attachView(mvpView);
-        getApplicationComponent().inject(this);
     }
 
     @Override

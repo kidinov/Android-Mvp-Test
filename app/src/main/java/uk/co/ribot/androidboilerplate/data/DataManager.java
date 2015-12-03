@@ -1,40 +1,34 @@
 package uk.co.ribot.androidboilerplate.data;
 
-import android.app.Application;
-
 import com.squareup.otto.Bus;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.functions.Func1;
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.component.DaggerDataManagerComponent;
-import uk.co.ribot.androidboilerplate.injection.module.DataManagerModule;
 
+@Singleton
 public class DataManager {
 
-    @Inject protected RibotsService mRibotsService;
-    @Inject protected DatabaseHelper mDatabaseHelper;
-    @Inject protected PreferencesHelper mPreferencesHelper;
-    @Inject protected Bus mBus;
+    private final RibotsService mRibotsService;
+    private final DatabaseHelper mDatabaseHelper;
+    private final PreferencesHelper mPreferencesHelper;
+    private final Bus mBus;
 
-    public DataManager(Application application) {
-        injectDependencies(application);
-    }
-
-    protected void injectDependencies(Application application) {
-        DaggerDataManagerComponent.builder()
-                .applicationComponent(((BoilerplateApplication) application).getComponent())
-                .dataManagerModule(new DataManagerModule(application))
-                .build()
-                .inject(this);
+    @Inject
+    public DataManager(RibotsService ribotsService, Bus bus, PreferencesHelper preferencesHelper,
+                       DatabaseHelper databaseHelper) {
+        mRibotsService = ribotsService;
+        mBus = bus;
+        mPreferencesHelper = preferencesHelper;
+        mDatabaseHelper = databaseHelper;
     }
 
     public PreferencesHelper getPreferencesHelper() {
