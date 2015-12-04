@@ -118,7 +118,7 @@ dependencies {
     //compile 'io.reactivex:rxandroid:1.0.1'
     compile(name:'rxandroid-release', ext:'aar')
 
-    compile 'io.reactivex:rxjava:1.0.16'
+    compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.2@aar') {
