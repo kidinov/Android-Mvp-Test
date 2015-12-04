@@ -26,7 +26,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
             "uk.co.ribot.androidboilerplate.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
 
     @Inject MainPresenter mMainPresenter;
-    private RibotsAdapter mRibotsAdapter;
+    @Inject RibotsAdapter mRibotsAdapter;
 
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
@@ -48,7 +48,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mRibotsAdapter = new RibotsAdapter();
         mRecyclerView.setAdapter(mRibotsAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mMainPresenter.attachView(this);

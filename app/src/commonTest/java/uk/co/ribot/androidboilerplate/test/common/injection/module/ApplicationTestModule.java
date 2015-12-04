@@ -50,9 +50,4 @@ public class ApplicationTestModule {
         return mock(RibotsService.class);
     }
 
-    /*@Provides
-    @Singleton
-    DatabaseHelper providesDatabaseHelper() {
-        return mock(DatabaseHelper.class);
-    }*/
 }
