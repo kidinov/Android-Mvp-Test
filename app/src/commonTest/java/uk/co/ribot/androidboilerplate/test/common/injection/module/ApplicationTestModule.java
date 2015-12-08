@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import uk.co.ribot.androidboilerplate.injection.ApplicationContext;
 
@@ -42,6 +43,14 @@ public class ApplicationTestModule {
     @Singleton
     Bus provideEventBus() {
         return new Bus();
+    }
+
+    /************* MOCKS *************/
+
+    @Provides
+    @Singleton
+    DataManager provideDataManager() {
+        return mock(DataManager.class);
     }
 
     @Provides

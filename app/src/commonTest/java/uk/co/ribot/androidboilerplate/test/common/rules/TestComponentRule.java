@@ -7,9 +7,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import uk.co.ribot.androidboilerplate.BoilerplateApplication;
-import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
-import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
-import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
+import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.DaggerTestComponent;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.TestComponent;
 import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTestModule;
@@ -23,35 +21,23 @@ import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTe
  */
 public class TestComponentRule implements TestRule {
 
-    private TestComponent mTestComponent;
-    private Context mContext;
+    private final TestComponent mTestComponent;
+    private final Context mContext;
 
     public TestComponentRule(Context context) {
         mContext = context;
+        BoilerplateApplication application = BoilerplateApplication.get(context);
+        mTestComponent = DaggerTestComponent.builder()
+                .applicationTestModule(new ApplicationTestModule(application))
+                .build();
     }
 
     public Context getContext() {
         return mContext;
     }
 
-    public RibotsService getMockRibotsService() {
-        return mTestComponent.ribotsService();
-    }
-
-    public DatabaseHelper getDatabaseHelper() {
-        return mTestComponent.databaseHelper();
-    }
-
-    public PreferencesHelper getPreferencesHelper() {
-        return mTestComponent.preferencesHelper();
-    }
-
-    private void setupDaggerTestComponentInApplication() {
-        BoilerplateApplication application = BoilerplateApplication.get(mContext);
-        mTestComponent = DaggerTestComponent.builder()
-                .applicationTestModule(new ApplicationTestModule(application))
-                .build();
-        application.setComponent(mTestComponent);
+    public DataManager getMockDataManager() {
+        return mTestComponent.dataManager();
     }
 
     @Override
@@ -59,12 +45,10 @@ public class TestComponentRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                try {
-                    setupDaggerTestComponentInApplication();
-                    base.evaluate();
-                } finally {
-                    mTestComponent = null;
-                }
+                BoilerplateApplication application = BoilerplateApplication.get(mContext);
+                application.setComponent(mTestComponent);
+                base.evaluate();
+                application.setComponent(null);
             }
         };
     }

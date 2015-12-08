@@ -3,7 +3,6 @@ package uk.co.ribot.androidboilerplate;
 import android.database.Cursor;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -16,9 +15,9 @@ import java.util.List;
 import rx.observers.TestSubscriber;
 import uk.co.ribot.androidboilerplate.data.local.DatabaseHelper;
 import uk.co.ribot.androidboilerplate.data.local.Db;
+import uk.co.ribot.androidboilerplate.data.local.DbOpenHelper;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
-import uk.co.ribot.androidboilerplate.test.common.rules.TestComponentRule;
 import uk.co.ribot.androidboilerplate.util.DefaultConfig;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,15 +29,11 @@ import static junit.framework.Assert.assertEquals;
 @Config(constants = BuildConfig.class, sdk = DefaultConfig.EMULATE_SDK)
 public class DatabaseHelperTest {
 
-    private DatabaseHelper mDatabaseHelper;
-
-    @Rule
-    public final TestComponentRule component =
-            new TestComponentRule(RuntimeEnvironment.application);
+    private final DatabaseHelper mDatabaseHelper =
+            new DatabaseHelper(new DbOpenHelper(RuntimeEnvironment.application));
 
     @Before
     public void setUp() {
-        mDatabaseHelper = component.getDatabaseHelper();
         mDatabaseHelper.clearTables().subscribe();
     }
 
