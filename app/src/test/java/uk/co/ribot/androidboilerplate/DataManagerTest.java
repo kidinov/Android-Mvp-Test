@@ -1,7 +1,5 @@
 package uk.co.ribot.androidboilerplate;
 
-import com.squareup.otto.Bus;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +17,7 @@ import uk.co.ribot.androidboilerplate.data.local.PreferencesHelper;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
 import uk.co.ribot.androidboilerplate.test.common.TestDataFactory;
+import uk.co.ribot.androidboilerplate.util.EventPosterHelper;
 
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.never;
@@ -39,13 +38,13 @@ public class DataManagerTest {
     @Mock DatabaseHelper mMockDatabaseHelper;
     @Mock PreferencesHelper mMockPreferencesHelper;
     @Mock RibotsService mMockRibotsService;
-    private final Bus mBus = new Bus();
+    @Mock EventPosterHelper mEventPosterHelper;
     private DataManager mDataManager;
 
     @Before
     public void setUp() {
-        mDataManager = new DataManager(mMockRibotsService, mBus, mMockPreferencesHelper,
-                mMockDatabaseHelper);
+        mDataManager = new DataManager(mMockRibotsService, mMockPreferencesHelper,
+                mMockDatabaseHelper, mEventPosterHelper);
     }
 
     @Test
