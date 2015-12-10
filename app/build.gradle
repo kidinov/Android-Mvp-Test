@@ -112,12 +112,7 @@ dependencies {
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
     compile 'com.squareup:otto:1.3.8'
 
-    // Uses a compiled aar version of latest RxAndroid because issue #238
-    // is not in maven central yet
-    // TODO replace when they push new version to maven central and remove AAR
-    //compile 'io.reactivex:rxandroid:1.0.1'
-    compile(name:'rxandroid-release', ext:'aar')
-
+    compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.jakewharton.timber:timber:4.1.0'
