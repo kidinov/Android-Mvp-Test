@@ -5,12 +5,6 @@ apply plugin: 'com.neenbedankt.android-apt'
 //TODO uncomment line below after adding fabric api secret and key to fabric.properties
 //apply plugin: 'io.fabric'
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
-
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
