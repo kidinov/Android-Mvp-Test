@@ -147,4 +147,9 @@ dependencies {
     androidTestApt daggerCompiler
 }
 
+// Log out test results to console
+tasks.matching {it instanceof Test}.all {
+    testLogging.events = ["failed", "passed", "skipped"]
+}
+
 
