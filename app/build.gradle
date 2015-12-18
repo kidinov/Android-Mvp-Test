@@ -100,7 +100,7 @@ dependencies {
     compile "com.android.support:support-annotations:$SUPPORT_LIBRARY_VERSION"
 
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.sqlbrite:sqlbrite:0.4.1'
+    compile 'com.squareup.sqlbrite:sqlbrite:0.5.0'
     compile "com.squareup.retrofit:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit:adapter-rxjava:$RETROFIT_VERSION"
