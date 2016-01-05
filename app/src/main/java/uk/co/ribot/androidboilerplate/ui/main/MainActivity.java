@@ -58,6 +58,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mMainPresenter.detachView();
+    }
+
     /***** MVP View methods implementation *****/
 
     @Override
