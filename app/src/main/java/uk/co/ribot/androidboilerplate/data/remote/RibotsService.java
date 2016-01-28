@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
-import retrofit.http.GET;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Retrofit;
+import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.http.GET;
 import rx.Observable;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 
