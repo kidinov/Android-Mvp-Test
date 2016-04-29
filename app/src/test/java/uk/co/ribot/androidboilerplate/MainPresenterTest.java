@@ -20,9 +20,9 @@ import uk.co.ribot.androidboilerplate.ui.main.MainPresenter;
 import uk.co.ribot.androidboilerplate.util.RxSchedulersOverrideRule;
 
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MainPresenterTest {
@@ -48,9 +48,8 @@ public class MainPresenterTest {
     @Test
     public void loadRibotsReturnsRibots() {
         List<Ribot> ribots = TestDataFactory.makeListRibots(10);
-        doReturn(Observable.just(ribots))
-                .when(mMockDataManager)
-                .getRibots();
+        when(mMockDataManager.getRibots())
+                .thenReturn(Observable.just(ribots));
 
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibots(ribots);
@@ -60,9 +59,8 @@ public class MainPresenterTest {
 
     @Test
     public void loadRibotsReturnsEmptyList() {
-        doReturn(Observable.just(Collections.emptyList()))
-                .when(mMockDataManager)
-                .getRibots();
+        when(mMockDataManager.getRibots())
+                .thenReturn(Observable.just(Collections.<Ribot>emptyList()));
 
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showRibotsEmpty();
@@ -72,13 +70,13 @@ public class MainPresenterTest {
 
     @Test
     public void loadRibotsFails() {
-        doReturn(Observable.error(new RuntimeException()))
-                .when(mMockDataManager)
-                .getRibots();
+        when(mMockDataManager.getRibots())
+                .thenReturn(Observable.<List<Ribot>>error(new RuntimeException()));
 
         mMainPresenter.loadRibots();
         verify(mMockMainMvpView).showError();
         verify(mMockMainMvpView, never()).showRibotsEmpty();
         verify(mMockMainMvpView, never()).showRibots(anyListOf(Ribot.class));
     }
+
 }
