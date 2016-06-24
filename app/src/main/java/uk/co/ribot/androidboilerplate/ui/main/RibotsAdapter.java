@@ -38,7 +38,7 @@ public class RibotsAdapter extends RecyclerView.Adapter<RibotsAdapter.RibotViewH
     }
 
     @Override
-    public void onBindViewHolder(RibotViewHolder holder, int position) {
+    public void onBindViewHolder(final RibotViewHolder holder, int position) {
         Ribot ribot = mRibots.get(position);
         holder.hexColorView.setBackgroundColor(Color.parseColor(ribot.profile.hexColor));
         holder.nameTextView.setText(String.format("%s %s",
