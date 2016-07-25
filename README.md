@@ -1,6 +1,6 @@
 # Android Boilerplate
 
-Adjusted ribot's android boilerplate for my need
+Adjusted ribot's android boilerplate for my needs
 
 Libraries and tools included:
 
