@@ -34,15 +34,17 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class DataManagerTest {
 
-    @Mock DatabaseHelper mMockDatabaseHelper;
-    @Mock PreferencesHelper mMockPreferencesHelper;
-    @Mock RibotsService mMockRibotsService;
-    private DataManager mDataManager;
+    @Mock
+    DatabaseHelper mockDatabaseHelper;
+    @Mock
+    PreferencesHelper mockPreferencesHelper;
+    @Mock
+    RibotsService mockRibotsService;
+    private DataManager dataManager;
 
     @Before
     public void setUp() {
-        mDataManager = new DataManager(mMockRibotsService, mMockPreferencesHelper,
-                mMockDatabaseHelper);
+        dataManager = new DataManager(mockRibotsService, mockPreferencesHelper, mockDatabaseHelper);
     }
 
     @Test
@@ -52,7 +54,7 @@ public class DataManagerTest {
         stubSyncRibotsHelperCalls(ribots);
 
         TestSubscriber<Ribot> result = new TestSubscriber<>();
-        mDataManager.syncRibots().subscribe(result);
+        dataManager.syncRibots().subscribe(result);
         result.assertNoErrors();
         result.assertReceivedOnNext(ribots);
     }
@@ -63,29 +65,29 @@ public class DataManagerTest {
                 TestDataFactory.makeRibot("r2"));
         stubSyncRibotsHelperCalls(ribots);
 
-        mDataManager.syncRibots().subscribe();
+        dataManager.syncRibots().subscribe();
         // Verify right calls to helper methods
-        verify(mMockRibotsService).getRibots();
-        verify(mMockDatabaseHelper).setRibots(ribots);
+        verify(mockRibotsService).getRibots();
+        verify(mockDatabaseHelper).saveRibots(ribots);
     }
 
     @Test
     public void syncRibotsDoesNotCallDatabaseWhenApiFails() {
-        when(mMockRibotsService.getRibots())
-                .thenReturn(Observable.<List<Ribot>>error(new RuntimeException()));
+        when(mockRibotsService.getRibots())
+                .thenReturn(Observable.error(new RuntimeException()));
 
-        mDataManager.syncRibots().subscribe(new TestSubscriber<Ribot>());
+        dataManager.syncRibots().subscribe(new TestSubscriber<>());
         // Verify right calls to helper methods
-        verify(mMockRibotsService).getRibots();
-        verify(mMockDatabaseHelper, never()).setRibots(anyListOf(Ribot.class));
+        verify(mockRibotsService).getRibots();
+        verify(mockDatabaseHelper, never()).saveRibots(anyListOf(Ribot.class));
     }
 
     private void stubSyncRibotsHelperCalls(List<Ribot> ribots) {
         // Stub calls to the ribot service and database helper.
-        when(mMockRibotsService.getRibots())
+        when(mockRibotsService.getRibots())
                 .thenReturn(Observable.just(ribots));
-        when(mMockDatabaseHelper.setRibots(ribots))
-                .thenReturn(Observable.from(ribots));
+        when(mockDatabaseHelper.saveRibots(ribots))
+                .thenReturn(Observable.just(ribots));
     }
 
 }

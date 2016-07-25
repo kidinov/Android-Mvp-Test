@@ -6,33 +6,32 @@ package uk.co.ribot.androidboilerplate.ui.base;
  * can be accessed from the children classes by calling getMvpView().
  */
 public class BasePresenter<T extends MvpView> implements Presenter<T> {
-
-    private T mMvpView;
+    private T mvpView;
 
     @Override
     public void attachView(T mvpView) {
-        mMvpView = mvpView;
+        this.mvpView = mvpView;
     }
 
     @Override
     public void detachView() {
-        mMvpView = null;
+        mvpView = null;
     }
 
-    public boolean isViewAttached() {
-        return mMvpView != null;
+    private boolean isViewAttached() {
+        return mvpView != null;
     }
 
-    public T getMvpView() {
-        return mMvpView;
+    protected T getMvpView() {
+        return mvpView;
     }
 
-    public void checkViewAttached() {
+    protected void checkViewAttached() {
         if (!isViewAttached()) throw new MvpViewNotAttachedException();
     }
 
-    public static class MvpViewNotAttachedException extends RuntimeException {
-        public MvpViewNotAttachedException() {
+    private static class MvpViewNotAttachedException extends RuntimeException {
+        MvpViewNotAttachedException() {
             super("Please call Presenter.attachView(MvpView) before" +
                     " requesting data to the Presenter");
         }

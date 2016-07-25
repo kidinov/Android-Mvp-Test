@@ -7,5 +7,4 @@ package uk.co.ribot.androidboilerplate.ui.base;
  * that then usually will be implemented by an Activity or Fragment.
  */
 public interface MvpView {
-
 }

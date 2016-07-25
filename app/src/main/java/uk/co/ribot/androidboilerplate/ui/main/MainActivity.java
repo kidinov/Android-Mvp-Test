@@ -14,23 +14,27 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.ribot.androidboilerplate.R;
 import uk.co.ribot.androidboilerplate.data.SyncService;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
 import uk.co.ribot.androidboilerplate.ui.base.BaseActivity;
 import uk.co.ribot.androidboilerplate.util.DialogFactory;
 
-public class MainActivity extends BaseActivity implements MainMvpView {
+import uk.co.ribot.androidboilerplate.R;
 
+import uk.co.ribot.androidboilerplate.data.model.Ribot;
+
+public class MainActivity extends BaseActivity implements MainMvpView {
     private static final String EXTRA_TRIGGER_SYNC_FLAG =
             "uk.co.ribot.androidboilerplate.ui.main.MainActivity.EXTRA_TRIGGER_SYNC_FLAG";
 
-    @Inject MainPresenter mMainPresenter;
-    @Inject RibotsAdapter mRibotsAdapter;
+    @Inject
+    MainPresenter mainPresenter;
+    @Inject
+    RibotsAdapter ribotsAdapter;
 
-    @BindView(R.id.recycler_view) RecyclerView mRecyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-    /**
+    /*
      * Return an Intent to start this Activity.
      * triggerDataSyncOnCreate allows disabling the background sync service onCreate. Should
      * only be set to false during testing.
@@ -44,14 +48,14 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityComponent().inject(this);
+        getActivityComponent().inject(this);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mRecyclerView.setAdapter(mRibotsAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mMainPresenter.attachView(this);
-        mMainPresenter.loadRibots();
+        recyclerView.setAdapter(ribotsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mainPresenter.attachView(this);
+        mainPresenter.loadRibots();
 
         if (getIntent().getBooleanExtra(EXTRA_TRIGGER_SYNC_FLAG, true)) {
             startService(SyncService.getStartIntent(this));
@@ -62,27 +66,28 @@ public class MainActivity extends BaseActivity implements MainMvpView {
     protected void onDestroy() {
         super.onDestroy();
 
-        mMainPresenter.detachView();
+        mainPresenter.detachView();
     }
 
-    /***** MVP View methods implementation *****/
+    /*****
+     * MVP View methods implementation
+     *****/
 
     @Override
     public void showRibots(List<Ribot> ribots) {
-        mRibotsAdapter.setRibots(ribots);
-        mRibotsAdapter.notifyDataSetChanged();
+        ribotsAdapter.setRibots(ribots);
+        ribotsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showError() {
-        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_ribots))
-                .show();
+        DialogFactory.createGenericErrorDialog(this, getString(R.string.error_loading_ribots)).show();
     }
 
     @Override
     public void showRibotsEmpty() {
-        mRibotsAdapter.setRibots(Collections.<Ribot>emptyList());
-        mRibotsAdapter.notifyDataSetChanged();
+        ribotsAdapter.setRibots(Collections.emptyList());
+        ribotsAdapter.notifyDataSetChanged();
         Toast.makeText(this, R.string.empty_ribots, Toast.LENGTH_LONG).show();
     }
 

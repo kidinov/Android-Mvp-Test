@@ -7,9 +7,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.data.remote.RibotsService;
-import uk.co.ribot.androidboilerplate.injection.ApplicationContext;
+import uk.co.ribot.androidboilerplate.injection.annotation.ApplicationContext;
 
 import static org.mockito.Mockito.mock;
 
@@ -20,24 +21,26 @@ import static org.mockito.Mockito.mock;
 @Module
 public class ApplicationTestModule {
 
-    private final Application mApplication;
+    private final Application application;
 
     public ApplicationTestModule(Application application) {
-        mApplication = application;
+        this.application = application;
     }
 
     @Provides
     Application provideApplication() {
-        return mApplication;
+        return application;
     }
 
     @Provides
     @ApplicationContext
     Context provideContext() {
-        return mApplication;
+        return application;
     }
 
-    /************* MOCKS *************/
+    /*************
+     * MOCKS
+     *************/
 
     @Provides
     @Singleton

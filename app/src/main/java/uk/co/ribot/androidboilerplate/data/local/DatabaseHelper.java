@@ -1,68 +1,50 @@
 package uk.co.ribot.androidboilerplate.data.local;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
-import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func1;
 import uk.co.ribot.androidboilerplate.data.model.Ribot;
 
 @Singleton
 public class DatabaseHelper {
+    private final Realm realm;
 
-    private final BriteDatabase mDb;
-
-    @Inject
-    public DatabaseHelper(DbOpenHelper dbOpenHelper) {
-        mDb = SqlBrite.create().wrapDatabaseHelper(dbOpenHelper);
+    public DatabaseHelper(Realm realm) {
+        this.realm = realm;
     }
 
-    public BriteDatabase getBriteDb() {
-        return mDb;
-    }
-
-    public Observable<Ribot> setRibots(final Collection<Ribot> newRibots) {
-        return Observable.create(new Observable.OnSubscribe<Ribot>() {
-            @Override
-            public void call(Subscriber<? super Ribot> subscriber) {
-                if (subscriber.isUnsubscribed()) return;
-                BriteDatabase.Transaction transaction = mDb.newTransaction();
-                try {
-                    mDb.delete(Db.RibotProfileTable.TABLE_NAME, null);
-                    for (Ribot ribot : newRibots) {
-                        long result = mDb.insert(Db.RibotProfileTable.TABLE_NAME,
-                                Db.RibotProfileTable.toContentValues(ribot.profile()),
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        if (result >= 0) subscriber.onNext(ribot);
-                    }
-                    transaction.markSuccessful();
-                    subscriber.onCompleted();
-                } finally {
-                    transaction.end();
-                }
-            }
+    public Observable<List<Ribot>> saveRibots(final Collection<Ribot> newRibots) {
+        return Observable.create(subscriber -> {
+            getSavedRibots().deleteAllFromRealm();
+            realm.executeTransaction(realm -> {
+                subscriber.onNext(realm.copyToRealm(newRibots));
+                subscriber.onCompleted();
+            });
         });
     }
 
     public Observable<List<Ribot>> getRibots() {
-        return mDb.createQuery(Db.RibotProfileTable.TABLE_NAME,
-                "SELECT * FROM " + Db.RibotProfileTable.TABLE_NAME)
-                .mapToList(new Func1<Cursor, Ribot>() {
-                    @Override
-                    public Ribot call(Cursor cursor) {
-                        return Ribot.create(Db.RibotProfileTable.parseCursor(cursor));
+        return getSavedRibots().asObservable()
+                .flatMap(ribots -> {
+                    List<Ribot> list = new ArrayList<>();
+                    for (Ribot ribot : ribots) {
+                        list.add(ribot);
                     }
+                    return Observable.just(list);
                 });
+    }
+
+    @NonNull
+    private RealmResults<Ribot> getSavedRibots() {
+        return realm.where(Ribot.class).findAll();
     }
 
 }

@@ -9,5 +9,4 @@ import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTe
 @Singleton
 @Component(modules = ApplicationTestModule.class)
 public interface TestComponent extends ApplicationComponent {
-
 }

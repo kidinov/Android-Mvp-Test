@@ -1,10 +1,8 @@
 package uk.co.ribot.androidboilerplate.util;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.functions.Func1;
 import rx.subjects.PublishSubject;
 
 /**
@@ -13,44 +11,31 @@ import rx.subjects.PublishSubject;
 @Singleton
 public class RxEventBus {
 
-    private final PublishSubject<Object> mBusSubject;
+    private final PublishSubject<Object> busSubject;
 
-    @Inject
     public RxEventBus() {
-        mBusSubject = PublishSubject.create();
+        busSubject = PublishSubject.create();
     }
 
     /**
      * Posts an object (usually an Event) to the bus
      */
     public void post(Object event) {
-        mBusSubject.onNext(event);
+        busSubject.onNext(event);
     }
 
     /**
      * Observable that will emmit everything posted to the event bus.
      */
     public Observable<Object> observable() {
-        return mBusSubject;
+        return busSubject;
     }
 
     /**
      * Observable that only emits events of a specific class.
      * Use this if you only want to subscribe to one type of events.
      */
-    public <T> Observable<T> filteredObservable(final Class<T> eventClass) {
-        return mBusSubject.filter(new Func1<Object, Boolean>() {
-            @Override
-            public Boolean call(Object event) {
-                return eventClass.isInstance(event);
-            }
-        }).map(new Func1<Object, T>() {
-            //Safe to cast because of the previous filter
-            @SuppressWarnings("unchecked")
-            @Override
-            public T call(Object event) {
-                return (T) event;
-            }
-        });
+    <T> Observable<T> filteredObservable(final Class<T> eventClass) {
+        return busSubject.filter(eventClass::isInstance).map(event -> (T) event);
     }
 }

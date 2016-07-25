@@ -5,25 +5,25 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import uk.co.ribot.androidboilerplate.injection.ActivityContext;
+import uk.co.ribot.androidboilerplate.injection.annotation.ActivityContext;
 
 @Module
 public class ActivityModule {
 
-    private Activity mActivity;
+    private Activity activity;
 
     public ActivityModule(Activity activity) {
-        mActivity = activity;
+        this.activity = activity;
     }
 
     @Provides
     Activity provideActivity() {
-        return mActivity;
+        return activity;
     }
 
     @Provides
     @ActivityContext
     Context providesContext() {
-        return mActivity;
+        return activity;
     }
 }

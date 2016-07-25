@@ -14,13 +14,12 @@ import uk.co.ribot.androidboilerplate.data.model.Ribot;
  * The aim of this class is to help setting up test fixtures.
  */
 public class TestDataFactory {
-
-    public static String randomUuid() {
+    private static String randomUuid() {
         return UUID.randomUUID().toString();
     }
 
     public static Ribot makeRibot(String uniqueSuffix) {
-        return Ribot.create(makeProfile(uniqueSuffix));
+        return new Ribot(makeProfile(uniqueSuffix));
     }
 
     public static List<Ribot> makeListRibots(int number) {
@@ -31,8 +30,9 @@ public class TestDataFactory {
         return ribots;
     }
 
-    public static Profile makeProfile(String uniqueSuffix) {
-        return Profile.builder()
+    private static Profile makeProfile(String uniqueSuffix) {
+        Profile.Builder builder = new Profile.Builder();
+        return builder
                 .setName(makeName(uniqueSuffix))
                 .setEmail("email" + uniqueSuffix + "@ribot.co.uk")
                 .setDateOfBirth(new Date())
@@ -42,8 +42,8 @@ public class TestDataFactory {
                 .build();
     }
 
-    public static Name makeName(String uniqueSuffix) {
-        return Name.create("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix);
+    private static Name makeName(String uniqueSuffix) {
+        return new Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix);
     }
 
 }

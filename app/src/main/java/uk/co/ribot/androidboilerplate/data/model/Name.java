@@ -1,23 +1,33 @@
 package uk.co.ribot.androidboilerplate.data.model;
 
-import android.os.Parcelable;
-
-import com.google.auto.value.AutoValue;
-import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
+import io.realm.RealmObject;
 
 
-@AutoValue
-public abstract class Name implements Parcelable {
-    public abstract String first();
-    public abstract String last();
+public class Name extends RealmObject {
+    private String first;
+    private String last;
 
-    public static Name create(String first, String last) {
-        return new AutoValue_Name(first, last);
+    public Name() {
     }
 
-    public static TypeAdapter<Name> typeAdapter(Gson gson) {
-        return new AutoValue_Name.GsonTypeAdapter(gson);
+    public Name(String first, String last) {
+        this.first = first;
+        this.last = last;
     }
 
+    public String getFirst() {
+        return first;
+    }
+
+    public void setFirst(String first) {
+        this.first = first;
+    }
+
+    public String getLast() {
+        return last;
+    }
+
+    public void setLast(String last) {
+        this.last = last;
+    }
 }

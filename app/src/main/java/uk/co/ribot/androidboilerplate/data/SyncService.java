@@ -9,19 +9,18 @@ import android.os.IBinder;
 
 import javax.inject.Inject;
 
-import rx.Observer;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
-import uk.co.ribot.androidboilerplate.data.model.Ribot;
+import uk.co.ribot.androidboilerplate.App;
+import uk.co.ribot.androidboilerplate.data.remote.RetrofitException;
 import uk.co.ribot.androidboilerplate.util.AndroidComponentUtil;
 import uk.co.ribot.androidboilerplate.util.NetworkUtil;
+import uk.co.ribot.androidboilerplate.util.RxUtil;
 
 public class SyncService extends Service {
-
-    @Inject DataManager mDataManager;
-    private Subscription mSubscription;
+    @Inject
+    DataManager dataManager;
+    private Subscription subscription;
 
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SyncService.class);
@@ -34,7 +33,7 @@ public class SyncService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        BoilerplateApplication.get(this).getComponent().inject(this);
+        App.get(this).getComponent().inject(this);
     }
 
     @Override
@@ -48,34 +47,24 @@ public class SyncService extends Service {
             return START_NOT_STICKY;
         }
 
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) mSubscription.unsubscribe();
-        mSubscription = mDataManager.syncRibots()
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<Ribot>() {
-                    @Override
-                    public void onCompleted() {
-                        Timber.i("Synced successfully!");
-                        stopSelf(startId);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.w(e, "Error syncing.");
-                        stopSelf(startId);
-
-                    }
-
-                    @Override
-                    public void onNext(Ribot ribot) {
+        RxUtil.unsubscribe(subscription);
+        subscription = dataManager.syncRibots()
+                .doAfterTerminate(() -> stopSelf(startId))
+                .subscribe(x -> {
+                }, e -> {
+                    RetrofitException retrofitException = (RetrofitException) e;
+                    if (retrofitException.getKind() == RetrofitException.Kind.HTTP) {
+                        Timber.e(e, "Server Error");
+                    } else {
+                        Timber.w(e, "Network Error");
                     }
                 });
-
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        if (mSubscription != null) mSubscription.unsubscribe();
+        if (subscription != null) subscription.unsubscribe();
         super.onDestroy();
     }
 

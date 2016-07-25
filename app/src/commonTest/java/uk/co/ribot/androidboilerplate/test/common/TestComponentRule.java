@@ -6,7 +6,7 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-import uk.co.ribot.androidboilerplate.BoilerplateApplication;
+import uk.co.ribot.androidboilerplate.App;
 import uk.co.ribot.androidboilerplate.data.DataManager;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.DaggerTestComponent;
 import uk.co.ribot.androidboilerplate.test.common.injection.component.TestComponent;
@@ -20,24 +20,23 @@ import uk.co.ribot.androidboilerplate.test.common.injection.module.ApplicationTe
  * stub mocks etc.
  */
 public class TestComponentRule implements TestRule {
-
-    private final TestComponent mTestComponent;
-    private final Context mContext;
+    private final TestComponent testComponent;
+    private final Context context;
 
     public TestComponentRule(Context context) {
-        mContext = context;
-        BoilerplateApplication application = BoilerplateApplication.get(context);
-        mTestComponent = DaggerTestComponent.builder()
+        this.context = context;
+        App application = App.get(context);
+        testComponent = DaggerTestComponent.builder()
                 .applicationTestModule(new ApplicationTestModule(application))
                 .build();
     }
 
     public Context getContext() {
-        return mContext;
+        return context;
     }
 
     public DataManager getMockDataManager() {
-        return mTestComponent.dataManager();
+        return testComponent.dataManager();
     }
 
     @Override
@@ -45,8 +44,8 @@ public class TestComponentRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                BoilerplateApplication application = BoilerplateApplication.get(mContext);
-                application.setComponent(mTestComponent);
+                App application = App.get(context);
+                application.setComponent(testComponent);
                 base.evaluate();
                 application.setComponent(null);
             }
