@@ -1,6 +1,6 @@
 # Android Boilerplate
 
-Sample Android app that we use at [ribot](http://ribot.co.uk) as a reference for new Android projects. It demonstrates the architecture, tools and guidelines that we use when developing for the Android platform (https://github.com/ribot/android-guidelines)
+Adjusted ribot's android boilerplate for my needs
 
 Libraries and tools included:
 
@@ -9,13 +9,11 @@ Libraries and tools included:
 - [RxJava](https://github.com/ReactiveX/RxJava) and [RxAndroid](https://github.com/ReactiveX/RxAndroid) 
 - [Retrofit 2](http://square.github.io/retrofit/)
 - [Dagger 2](http://google.github.io/dagger/)
-- [SqlBrite](https://github.com/square/sqlbrite)
 - [Butterknife](https://github.com/JakeWharton/butterknife)
 - [Timber](https://github.com/JakeWharton/timber)
 - [Glide](https://github.com/bumptech/glide)
-- [AutoValue](https://github.com/google/auto/tree/master/value) with extensions [AutoValueParcel](https://github.com/rharter/auto-value-parcel) and [AutoValueGson](https://github.com/rharter/auto-value-gson)
 - Functional tests with [Espresso](https://google.github.io/android-testing-support-library/docs/espresso/index.html)
-- [Robolectric](http://robolectric.org/)
+- [Realm](https://realm.io/)
 - [Mockito](http://mockito.org/)
 - [Checkstyle](http://checkstyle.sourceforge.net/), [PMD](https://pmd.github.io/) and [Findbugs](http://findbugs.sourceforge.net/) for code analysis
 
@@ -114,17 +112,6 @@ the Alpha, Beta or production channels like this
 ```
 Read [plugin documentation](https://github.com/Triple-T/gradle-play-publisher) for more info.
 
-### Crashlytics
-
-You can also use Fabric's Crashlytics for distributing beta releases. Remember to add your fabric
-account details to `app/src/fabric.properties`.
-
-To upload a release build to Crashlytics run:
-
-```
-./gradlew assembleRelease crashlyticsUploadDistributionRelease
-```
-
 ## New project setup 
 
 To quickly start a new project from this boilerplate follow the next steps:
@@ -137,26 +124,7 @@ To quickly start a new project from this boilerplate follow the next steps:
 * Create a new git repository, [see GitHub tutorial](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/).
 * Replace the example code with your app code following the same architecture.
 * In `app/build.gradle` add the signing config to enable release versions.
-* Add Fabric API key and secret to fabric.properties and uncomment Fabric plugin set up in `app/build.gradle`
 * Update `proguard-rules.pro` to keep models (see TODO in file) and add extra rules to file if needed.
 * Update README with information relevant to the new project.
 * Update LICENSE to match the requirements of the new project.
-
-## License
-
-```
-    Copyright 2015 Ribot Ltd.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-```
 
