@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray"
-    tools:context="uk.co.ribot.androidboilerplate.ui.main.MainActivity">
+    tools:context="org.kidinov.mvp_test.ui.main.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
