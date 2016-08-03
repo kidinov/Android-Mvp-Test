@@ -7,4 +7,7 @@
     <string name="dialog_error_title">Sorry</string>
     <string name="error_text">Error happened</string>
     <string name="retry">Retry</string>
+
+    <!--INSTA-->
+    <string name="cant_get_feed">Can\'t get feed</string>
 </resources>

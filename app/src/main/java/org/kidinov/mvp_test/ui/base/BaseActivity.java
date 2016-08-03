@@ -3,16 +3,17 @@ package org.kidinov.mvp_test.ui.base;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
-import timber.log.Timber;
 import org.kidinov.mvp_test.App;
 import org.kidinov.mvp_test.injection.component.ActivityComponent;
 import org.kidinov.mvp_test.injection.component.ConfigPersistentComponent;
 import org.kidinov.mvp_test.injection.component.DaggerConfigPersistentComponent;
 import org.kidinov.mvp_test.injection.module.ActivityModule;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import timber.log.Timber;
 
 /**
  * Abstract activity that every other Activity in this application must implement. It handles

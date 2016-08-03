@@ -4,22 +4,24 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kidinov.mvp_test.data.DataManager;
+import org.kidinov.mvp_test.data.local.DatabaseHelper;
+import org.kidinov.mvp_test.data.local.PreferencesHelper;
+import org.kidinov.mvp_test.data.model.InstaFeed;
+import org.kidinov.mvp_test.data.model.InstaItem;
+import org.kidinov.mvp_test.data.remote.InstaService;
+import org.kidinov.mvp_test.test.common.TestDataFactory;
+import org.kidinov.mvp_test.util.ListUtil;
+import org.kidinov.mvp_test.util.RxSchedulersOverrideRule;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
 import rx.observers.TestSubscriber;
-import org.kidinov.mvp_test.data.DataManager;
-import org.kidinov.mvp_test.data.local.DatabaseHelper;
-import org.kidinov.mvp_test.data.local.PreferencesHelper;
-import org.kidinov.mvp_test.data.model.Ribot;
-import org.kidinov.mvp_test.data.remote.RibotsService;
-import org.kidinov.mvp_test.test.common.TestDataFactory;
-import org.kidinov.mvp_test.util.RxSchedulersOverrideRule;
 
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -41,7 +43,7 @@ public class DataManagerTest {
     @Mock
     PreferencesHelper mockPreferencesHelper;
     @Mock
-    RibotsService mockRibotsService;
+    InstaService mockInstaService;
     private DataManager dataManager;
 
     @Rule
@@ -49,50 +51,95 @@ public class DataManagerTest {
 
     @Before
     public void setUp() {
-        dataManager = new DataManager(mockRibotsService, mockPreferencesHelper, mockDatabaseHelper);
+        dataManager = new DataManager(mockInstaService, mockPreferencesHelper, mockDatabaseHelper);
     }
 
     @Test
-    public void syncRibotsEmitsValues() {
-        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot("r1"),
-                TestDataFactory.makeRibot("r2"));
-        stubSyncRibotsHelperCalls(ribots);
+    public void getOldFeedItemsFromServerSaveData() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 20, 1);
+        stubInstaServiceAndDbHelper(feed);
 
-        TestSubscriber<Ribot> result = new TestSubscriber<>();
-        dataManager.syncRibots().subscribe(result);
+        TestSubscriber<List<InstaItem>> result = new TestSubscriber<>();
+        dataManager.getOldFeedItemsFromServer().subscribe(result);
         result.assertNoErrors();
-        result.assertReceivedOnNext(ribots);
+        List<InstaItem> nextEvent = result.getOnNextEvents().get(0);
+        assertTrue(ListUtil.compareInstaItemLists(feed.getInstaItems(), nextEvent));
     }
 
     @Test
-    public void syncRibotsCallsApiAndDatabase() {
-        List<Ribot> ribots = Arrays.asList(TestDataFactory.makeRibot("r1"),
-                TestDataFactory.makeRibot("r2"));
-        stubSyncRibotsHelperCalls(ribots);
+    public void getOldFeedItemsFromServerCallsApiAndDb() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 20, 1);
+        stubInstaServiceAndDbHelper(feed);
 
-        dataManager.syncRibots().subscribe();
-        // Verify right calls to helper methods
-        verify(mockRibotsService).getRibots();
-        verify(mockDatabaseHelper).saveRibots(ribots);
+        dataManager.getOldFeedItemsFromServer().subscribe();
+        verify(mockInstaService).getInstaFeed(null);
+        verify(mockDatabaseHelper).getSavedInstaFeedItemsSortedByTime();
+        verify(mockDatabaseHelper).saveInstaFeed(feed.getInstaItems());
     }
 
     @Test
-    public void syncRibotsDoesNotCallDatabaseWhenApiFails() {
-        when(mockRibotsService.getRibots())
+    public void getOldFeedItemsFromServerNotCallsDbIfApiFailed() {
+        when(mockInstaService.getInstaFeed(null))
                 .thenReturn(Observable.error(new RuntimeException()));
 
-        dataManager.syncRibots().subscribe(new TestSubscriber<>());
-        // Verify right calls to helper methods
-        verify(mockRibotsService).getRibots();
-        verify(mockDatabaseHelper, never()).saveRibots(anyListOf(Ribot.class));
+        dataManager.getOldFeedItemsFromServer().subscribe(new TestSubscriber<>());
+        verify(mockInstaService).getInstaFeed(null);
+        verify(mockDatabaseHelper, never()).saveInstaFeed(anyListOf(InstaItem.class));
     }
 
-    private void stubSyncRibotsHelperCalls(List<Ribot> ribots) {
-        // Stub calls to the ribot service and database helper.
-        when(mockRibotsService.getRibots())
-                .thenReturn(Observable.just(ribots));
-        when(mockDatabaseHelper.saveRibots(ribots))
-                .thenReturn(Observable.just(ribots));
+    @Test
+    public void getFeedItemsFromServerSaveProperDateInDb() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 20, 1);
+        stubInstaServiceAndDbHelper(feed);
+
+        TestSubscriber<List<InstaItem>> result = new TestSubscriber<>();
+        dataManager.getFeedItemsFromServer().subscribe(result);
+        result.assertNoErrors();
+        List<InstaItem> nextEvent = result.getOnNextEvents().get(0);
+        assertTrue(ListUtil.compareInstaItemLists(feed.getInstaItems(), nextEvent));
+    }
+
+    @Test
+    public void getFeedItemsFromServerSaveCallsApiAndDb() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 20, 1);
+        stubInstaServiceAndDbHelper(feed);
+
+        dataManager.getFeedItemsFromServer().subscribe();
+        verify(mockInstaService).getInstaFeed(null);
+        verify(mockDatabaseHelper).clearInstaFeed();
+        verify(mockDatabaseHelper).saveInstaFeed(feed.getInstaItems());
+    }
+
+    @Test
+    public void getFeedItemsFromServerNotCallDbIfApiFailed() {
+        when(mockInstaService.getInstaFeed(null))
+                .thenReturn(Observable.error(new RuntimeException()));
+
+        dataManager.getFeedItemsFromServer().subscribe(new TestSubscriber<>());
+        verify(mockInstaService).getInstaFeed(null);
+        verify(mockDatabaseHelper, never()).saveInstaFeed(anyListOf(InstaItem.class));
+        verify(mockDatabaseHelper, never()).clearInstaFeed();
+    }
+
+    @Test
+    public void getFeedItemsFromServerNotClearDbIfNoNewItems() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 20, 1);
+        stubInstaServiceAndDbHelper(feed);
+
+        when(mockDatabaseHelper.getSavedInstaFeedItemsSortedByTime())
+                .thenReturn(feed.getInstaItems());
+
+        dataManager.getFeedItemsFromServer().subscribe();
+        verify(mockInstaService).getInstaFeed(null);
+        verify(mockDatabaseHelper).saveInstaFeed(anyListOf(InstaItem.class));
+        verify(mockDatabaseHelper, never()).clearInstaFeed();
+    }
+
+    private void stubInstaServiceAndDbHelper(InstaFeed feed) {
+        when(mockInstaService.getInstaFeed(null))
+                .thenReturn(Observable.just(feed));
+        when(mockDatabaseHelper.saveInstaFeed(feed.getInstaItems()))
+                .thenReturn(Observable.just(feed.getInstaItems()));
     }
 
 }

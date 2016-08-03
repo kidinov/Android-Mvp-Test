@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    xmlns:tools="http://schemas.android.com/tools"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="6dp"
+                                    android:layout_marginLeft="12dp"
+                                    android:layout_marginRight="12dp"
+                                    android:layout_marginTop="6dp"
+                                    app:cardCornerRadius="2dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_small_body"
+            tools:text="14 05 2016"
+            app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout"/>
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/text_small_body"
+            tools:text="Voronezh"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+            app:layout_constraintRight_toRightOf="@+id/constraintLayout"/>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="320dp"
+            android:scaleType="centerCrop"
+            tools:src="@mipmap/ic_launcher"
+            app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/date"
+            app:layout_constraintRight_toRightOf="@+id/constraintLayout"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

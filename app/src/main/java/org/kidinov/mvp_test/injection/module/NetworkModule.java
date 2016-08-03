@@ -28,7 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import org.kidinov.mvp_test.BuildConfig;
 import org.kidinov.mvp_test.data.local.realm.RealmString;
-import org.kidinov.mvp_test.data.remote.RibotsService;
+import org.kidinov.mvp_test.data.remote.InstaService;
 import org.kidinov.mvp_test.data.remote.RxErrorHandlingCallAdapterFactory;
 import org.kidinov.mvp_test.data.remote.UnauthorisedInterceptor;
 import org.kidinov.mvp_test.util.RxEventBus;
@@ -110,13 +110,13 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    RibotsService provideRibotsService(Gson gson, OkHttpClient okHttpClient) {
+    InstaService provideRemoteService(Gson gson, OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RibotsService.ENDPOINT)
+                .baseUrl(InstaService.ENDPOINT)
                 .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
-        return retrofit.create(RibotsService.class);
+        return retrofit.create(InstaService.class);
     }
 }

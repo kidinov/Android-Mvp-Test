@@ -1,31 +1,32 @@
 package org.kidinov.mvp_test;
 
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
+import org.kidinov.mvp_test.data.local.DatabaseHelper;
+import org.kidinov.mvp_test.data.model.InstaFeed;
+import org.kidinov.mvp_test.data.model.InstaItem;
+import org.kidinov.mvp_test.test.common.TestDataFactory;
+import org.kidinov.mvp_test.util.ListUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import rx.functions.Action0;
+import rx.observers.TestSubscriber;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
-import org.kidinov.mvp_test.data.local.DatabaseHelper;
-import org.kidinov.mvp_test.data.model.Ribot;
-import org.kidinov.mvp_test.test.common.TestDataFactory;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -64,49 +65,51 @@ public class DatabaseHelperTest {
     }
 
     @Test
-    public void saveRibots() {
-        Ribot ribot1 = TestDataFactory.makeRibot("r1");
-        Ribot ribot2 = TestDataFactory.makeRibot("r2");
-        List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
+    public void saveInstaFeed() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 10, 0);
 
         runOnUi(() -> {
-            databaseHelper.saveRibots(ribots)
-                    .subscribe(r -> {
-                        assertTrue(r.retainAll(ribots));
-                    }, e -> {
-                        Timber.e("", e);
-                        Assert.fail();
-                    });
+            TestSubscriber<List<InstaItem>> testObserver = new TestSubscriber<>();
+            databaseHelper.saveInstaFeed(feed.getInstaItems())
+                    .subscribe(testObserver);
 
-            List<Ribot> savedRibots = defaultInstance.where(Ribot.class).findAll();
-            assertEquals(savedRibots.size(), 2);
+            List<InstaItem> savedInstaItems = getSavedInstaItems();
 
-            for (int i = 0; i < ribots.size(); i++) {
-                assertEquals(ribots.get(i).compareTo(savedRibots.get(i)), 0);
-            }
+            testObserver.assertNoErrors();
+            List<List<InstaItem>> nextEvent = testObserver.getOnNextEvents();
+
+            assertTrue(ListUtil.compareInstaItemLists(feed.getInstaItems(), nextEvent.get(0)));
+            assertTrue(ListUtil.compareInstaItemLists(savedInstaItems, nextEvent.get(0)));
         });
     }
 
+    @NonNull
+    private RealmResults<InstaItem> getSavedInstaItems() {
+        return defaultInstance.where(InstaItem.class).findAll();
+    }
+
     @Test
-    public void getRibots() {
-        Ribot ribot1 = TestDataFactory.makeRibot("r1");
-        Ribot ribot2 = TestDataFactory.makeRibot("r2");
-        List<Ribot> ribots = Arrays.asList(ribot1, ribot2);
-
+    public void getSavedInstaFeedItemsObservable() {
+        InstaFeed feed = TestDataFactory.makeInstaFeed("", 10, 0);
         runOnUi(() -> {
-            compositeSubscription.add(databaseHelper.saveRibots(ribots).subscribe());
+            defaultInstance.executeTransaction(realm -> realm.copyToRealm(feed));
 
-            compositeSubscription.add(databaseHelper.getRibots()
-                    .subscribe(r -> {
-                        assertTrue(r.retainAll(ribots));
-                    }, e -> {
-                        Timber.e("", e);
-                        Assert.fail();
-                    }));
+            TestSubscriber<List<InstaItem>> testObserver = new TestSubscriber<>();
+            databaseHelper.getSavedInstaFeedItemsObservable()
+                    .subscribe(testObserver);
+
+            List<InstaItem> savedInstaItems = getSavedInstaItems();
+
+            testObserver.assertNoErrors();
+            List<List<InstaItem>> nextEvent = testObserver.getOnNextEvents();
+
+            assertTrue(ListUtil.compareInstaItemLists(feed.getInstaItems(), nextEvent.get(0)));
+            assertTrue(ListUtil.compareInstaItemLists(savedInstaItems, nextEvent.get(0)));
         });
     }
 
     private void runOnUi(Action0 action) {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(action::call);
     }
+
 }

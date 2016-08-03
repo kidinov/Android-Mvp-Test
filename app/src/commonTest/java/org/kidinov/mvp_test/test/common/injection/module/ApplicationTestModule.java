@@ -3,14 +3,14 @@ package org.kidinov.mvp_test.test.common.injection.module;
 import android.app.Application;
 import android.content.Context;
 
+import org.kidinov.mvp_test.data.DataManager;
+import org.kidinov.mvp_test.data.remote.InstaService;
+import org.kidinov.mvp_test.injection.annotation.ApplicationContext;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-
-import org.kidinov.mvp_test.data.DataManager;
-import org.kidinov.mvp_test.data.remote.RibotsService;
-import org.kidinov.mvp_test.injection.annotation.ApplicationContext;
 
 import static org.mockito.Mockito.mock;
 
@@ -50,8 +50,8 @@ public class ApplicationTestModule {
 
     @Provides
     @Singleton
-    RibotsService provideRibotsService() {
-        return mock(RibotsService.class);
+    InstaService provideInstaService() {
+        return mock(InstaService.class);
     }
 
 }

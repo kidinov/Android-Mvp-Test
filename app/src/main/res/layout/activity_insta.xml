@@ -25,28 +25,27 @@
     <ViewFlipper
         android:id="@+id/view_flipper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
             android:id="@+id/progress_view"
             layout="@layout/progress_view"/>
 
-        <include
-            android:id="@+id/recycler_view"
-            layout="@layout/recycler_view"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/recycler_view"
+                layout="@layout/recycler_view"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <include
             android:id="@+id/error_view"
             layout="@layout/error_layout"/>
 
     </ViewFlipper>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_cached_black_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

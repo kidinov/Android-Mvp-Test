@@ -1,13 +1,15 @@
 package org.kidinov.mvp_test.test.common;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import org.kidinov.mvp_test.data.model.Images;
+import org.kidinov.mvp_test.data.model.InstaFeed;
+import org.kidinov.mvp_test.data.model.InstaItem;
+import org.kidinov.mvp_test.data.model.Location;
+import org.kidinov.mvp_test.data.model.StandardResolution;
+
+import java.util.Random;
 import java.util.UUID;
 
-import org.kidinov.mvp_test.data.model.Name;
-import org.kidinov.mvp_test.data.model.Profile;
-import org.kidinov.mvp_test.data.model.Ribot;
+import io.realm.RealmList;
 
 /**
  * Factory class that makes instances of data models with random field values.
@@ -18,32 +20,87 @@ public class TestDataFactory {
         return UUID.randomUUID().toString();
     }
 
-    public static Ribot makeRibot(String uniqueSuffix) {
-        return new Ribot(makeProfile(uniqueSuffix));
-    }
-
-    public static List<Ribot> makeListRibots(int number) {
-        List<Ribot> ribots = new ArrayList<>();
-        for (int i = 0; i < number; i++) {
-            ribots.add(makeRibot(String.valueOf(i)));
+    private static String randomString() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
         }
-        return ribots;
+        return sb.toString();
     }
 
-    private static Profile makeProfile(String uniqueSuffix) {
-        Profile.Builder builder = new Profile.Builder();
-        return builder
-                .setName(makeName(uniqueSuffix))
-                .setEmail("email" + uniqueSuffix + "@ribot.co.uk")
-                .setDateOfBirth(new Date())
-                .setHexColor("#0066FF")
-                .setAvatar("http://api.io/images/" + uniqueSuffix)
-                .setBio(randomUuid())
-                .build();
+    private static Long randomLong() {
+        Random random = new Random();
+        return random.nextLong();
     }
 
-    private static Name makeName(String uniqueSuffix) {
-        return new Name("Name-" + uniqueSuffix, "Surname-" + uniqueSuffix);
+    private static Integer randomInt() {
+        Random random = new Random();
+        return random.nextInt();
+    }
+
+    public static InstaFeed makeInstaFeedWithSeqIds(int countOfItems) {
+        InstaFeed instaFeed = new InstaFeed();
+        instaFeed.setMoreAvailable(true);
+        instaFeed.setInstaItems(makeInstaItemsWithSeqIds(countOfItems));
+        return instaFeed;
+    }
+
+    private static RealmList<InstaItem> makeInstaItemsWithSeqIds(int countOfItems) {
+        RealmList<InstaItem> instaItems = new RealmList<>();
+        for (int i = 0; i < countOfItems; i++) {
+            instaItems.add(makeInstaItem(i));
+        }
+        return instaItems;
+    }
+
+    private static InstaItem makeInstaItem(int id) {
+        InstaItem item = new InstaItem();
+        item.setLocation(new Location("_location_"));
+        item.setCreatedTime(id * 1000000L );
+        item.setImages(makeInstaImages());
+        item.setId(String.valueOf(id));
+        return item;
+    }
+
+    public static InstaFeed makeInstaFeed(String prefix, int countOfItems, int dateСoefficient) {
+        InstaFeed instaFeed = new InstaFeed();
+        instaFeed.setMoreAvailable(true);
+        instaFeed.setInstaItems(makeInstaItems(prefix, countOfItems, dateСoefficient));
+        return instaFeed;
+    }
+
+    private static RealmList<InstaItem> makeInstaItems(String prefix, int countOfItems, int dateСoefficient) {
+        RealmList<InstaItem> instaItems = new RealmList<>();
+        for (int i = 0; i < countOfItems; i++) {
+            instaItems.add(makeInstaItem(prefix, i, dateСoefficient));
+        }
+        return instaItems;
+    }
+
+    private static InstaItem makeInstaItem(String prefix, int i, int dateСoefficient) {
+        InstaItem item = new InstaItem();
+        item.setLocation(new Location(prefix + "_location_" + i));
+        item.setCreatedTime(i * 1000000L * dateСoefficient);
+        item.setImages(makeInstaImages());
+        item.setId(randomUuid());
+        return item;
+    }
+
+    private static Images makeInstaImages() {
+        Images images = new Images();
+        images.setStandardResolution(makeInstaStandardResolution());
+        return images;
+    }
+
+    private static StandardResolution makeInstaStandardResolution() {
+        StandardResolution standardResolution = new StandardResolution();
+        standardResolution.setHeight(randomInt());
+        standardResolution.setUrl(randomString());
+        standardResolution.setWidth(randomInt());
+        return standardResolution;
     }
 
 }
