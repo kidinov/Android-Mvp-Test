@@ -57,6 +57,7 @@ public class InstaActivityTest {
         Collections.reverse(oldFeed.getInstaItems());
         DataManager mockDataManager = component.getMockDataManager();
         when(mockDataManager.subscribeOnFeedItemsChanges()).thenReturn(Observable.just(feed.getInstaItems()));
+        when(mockDataManager.getSavedFeedItemsCount()).thenReturn(1);
         when(mockDataManager.getFeedItemsFromServer()).thenReturn(Observable.just(feed.getInstaItems()));
         when(mockDataManager.getOldFeedItemsFromServer()).thenReturn(Observable.just(oldFeed.getInstaItems())
                 .delay(2, TimeUnit.SECONDS)
